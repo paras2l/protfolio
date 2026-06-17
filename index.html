@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lashkari — Web & 3D Experiences</title>
+
+    <!-- Google Fonts: Kanit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Kanit', 'sans-serif'],
+                    },
+                    colors: {
+                        background: '#0C0C0C',
+                        navy: '#0f172a',
+                        'navy-light': '#94a3b8',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --accent-1: #7c3aed;
+            --accent-2: #a855f7;
+            --accent-3: #c084fc;
+            --accent-glow: rgba(168, 85, 247, 0.4);
+        }
+        /* Base Styles */
+        body { background-color: #0C0C0C; color: #D7E2EA; overflow-x: hidden; }
+        
+        /* Gradient Text */
+        .hero-heading {
+            background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Navy Gradient for Services */
+        .navy-heading {
+            background: linear-gradient(180deg, #cbd5e1 0%, #64748b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Liquid Glass */
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        .liquid-glass::before {
+            content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.4) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+        }
+        .liquid-glass-strong {
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0px 4px 4px rgba(181,1,167,0.25), 4px 4px 12px rgba(119, 33, 177, 0.2) inset;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animations */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.25, 0.1, 0.25, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .stagger-1 { transition-delay: 0.1s; }
+        .stagger-2 { transition-delay: 0.2s; }
+        .stagger-3 { transition-delay: 0.3s; }
+        
+        .word-reveal span { opacity: 0; filter: blur(10px); transition: all 0.5s ease-out; display: inline-block; margin-right: 0.25em; }
+        .word-reveal.active span { opacity: 1; filter: blur(0); }
+        .word-reveal.active span:nth-child(1) { transition-delay: 0.1s; }
+        .word-reveal.active span:nth-child(2) { transition-delay: 0.2s; }
+        .word-reveal.active span:nth-child(3) { transition-delay: 0.3s; }
+        .word-reveal.active span:nth-child(4) { transition-delay: 0.4s; }
+        .word-reveal.active span:nth-child(5) { transition-delay: 0.5s; }
+        .word-reveal.active span:nth-child(6) { transition-delay: 0.6s; }
+
+        .hover-scale { transition: transform 0.2s; }
+        .hover-scale:hover { transform: scale(1.05); }
+        .project-img { transition: transform 0.7s; }
+        .project-card:hover .project-img { transform: scale(1.1); }
+
+        /* Hero Section */
+        .hero-title {
+            font-size: clamp(2.5rem, 10vw, 10.5rem);
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+        /* Avatar Canvas */
+        #avatar-canvas {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* About Section Custom */
+        .about-section-bg {
+            background: #0C0C0C;
+        }
+        .about-text-highlight {
+            color: #ffffff;
+            font-weight: 700;
+        }
+        .about-text-fade {
+            color: rgba(215,226,234,0.45);
+            font-weight: 300;
+        }
+        .about-btn-purple {
+            background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%);
+            border: none;
+            border-radius: 9999px;
+            padding: 14px 44px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.875rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .about-btn-purple:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 32px var(--accent-glow);
+        }
+
+        /* Hero zoom-out Ken Burns animation and Spotlight support */
+        @keyframes heroZoom { 0%{transform:scale(1.12)} 100%{transform:scale(1)} }
+        .hero-zoom {
+            animation: heroZoom 1.8s cubic-bezier(0.16,1,0.3,1) forwards;
+            mask-image: linear-gradient(to bottom, black 60%, transparent 95%);
+            -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 95%);
+            mask-repeat: no-repeat;
+            -webkit-mask-repeat: no-repeat;
+        }
+
+        /* Custom z-index classes to override default/missing Tailwind values */
+        .z-10 { z-index: 10; }
+        .z-11 { z-index: 11; }
+        .z-12 { z-index: 12; }
+        .z-15 { z-index: 15; }
+        .z-20 { z-index: 20; }
+        .z-25 { z-index: 25; }
+        .z-30 { z-index: 30; }
+        .z-40 { z-index: 40; }
+        .z-50 { z-index: 50; }
+
+        .hero-fade-overlay {
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 45vh;
+            background: linear-gradient(to top, #0C0C0C 0%, #0C0C0C 20%, rgba(12, 12, 12, 0.95) 35%, rgba(12, 12, 12, 0) 100%);
+            z-index: 15;
+            pointer-events: none;
+        }
+
+        .transition-about-services {
+            width: 100%;
+            height: 128px;
+            background: linear-gradient(to bottom, #0C0C0C, #0f172a);
+            position: relative;
+            z-index: 25;
+            margin-bottom: -1px;
+            pointer-events: none;
+        }
+
+        .transition-services-work {
+            width: 100%;
+            height: 128px;
+            background: linear-gradient(to bottom, #0f172a, #0C0C0C);
+            position: relative;
+            z-index: 25;
+            margin-bottom: -1px;
+            pointer-events: none;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0C0C0C; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    </style>
+</head>
+<body class="selection:bg-[#BBCCD7] selection:text-[#0C0C0C]">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 px-6 md:px-10 pt-6 md:pt-8">
+        <div class="flex justify-between items-center">
+            <!-- Logo with Heartbeat Dev Symbol -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--accent-1)] to-[var(--accent-2)] flex items-center justify-center shadow-[0_0_20px_var(--accent-glow)] group-hover:rotate-12 transition-transform duration-300">
+                    <svg class="text-white w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 12h3l3-9 3 18 3-12h3l2-3 2 3" />
+                    </svg>
+                </div>
+                <span class="text-xl md:text-2xl font-black text-white tracking-tighter">LASHKARI.</span>
+            </a>
+            
+            <div class="hidden md:flex gap-8">
+                <a href="#about" class="text-[#D7E2EA] font-medium uppercase tracking-wider hover:opacity-70 transition-opacity text-lg">About</a>
+                <a href="#services" class="text-[#D7E2EA] font-medium uppercase tracking-wider hover:opacity-70 transition-opacity text-lg">Services</a>
+                <a href="#work" class="text-[#D7E2EA] font-medium uppercase tracking-wider hover:opacity-70 transition-opacity text-lg">Work</a>
+                <a href="#contact" class="text-[#D7E2EA] font-medium uppercase tracking-wider hover:opacity-70 transition-opacity text-lg">Contact</a>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <!-- Settings Button -->
+                <button id="settings-btn" class="w-10 h-10 rounded-full liquid-glass flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-200 group text-[#D7E2EA] hover:text-white" aria-label="Settings">
+                    <svg class="w-5 h-5 group-hover:rotate-45 transition-transform duration-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                    </svg>
+                </button>
+                
+                <!-- Hamburger (mobile only) -->
+                <div class="md:hidden text-white cursor-pointer hover:opacity-80 transition-opacity">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="h-screen w-full flex flex-col relative overflow-hidden bg-[#0C0C0C]">
+        <!-- Spotlight Background Reveal Layers -->
+        <div class="absolute inset-0 bg-center bg-cover bg-no-repeat z-10 hero-zoom" 
+             style="background-image: url('https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260609_195923_b0ba8ace-1d1d-4f2c-9a28-1ab84b330680.png&w=1280&q=85');"></div>
+        <!-- Theme-colored cursor glow (Soft horizontal ellipse) -->
+        <div id="hero-cursor-glow" class="absolute pointer-events-none z-11"
+             style="width: 900px; height: 500px; border-radius: 50%; background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%); transform: translate(-50%, -50%); mix-blend-mode: screen; filter: blur(40px); opacity: 0.85; left: 50%; top: 50%;"></div>
+        <div id="hero-reveal-layer" class="absolute inset-0 bg-center bg-cover bg-no-repeat z-12 pointer-events-none" 
+             style="background-image: url('https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260609_201152_bba90a12-bf12-459f-91f0-51f237dbaf3b.png&w=1280&q=85'); mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;"></div>
+        <!-- Fade overlay to blend hero background into the About section seamlessly -->
+        <div class="hero-fade-overlay"></div>
+
+        <div class="flex-1 flex flex-col pt-24 px-6 md:px-10 relative z-20 h-full">
+            
+            <!-- Big Heading -->
+            <div class="text-center relative z-30">
+                <h1 class="hero-heading hero-title font-black uppercase tracking-tighter reveal active">
+                    I'm Lashkari
+                </h1>
+            </div>
+
+            <!-- Avatar shifted slightly below center -->
+            <div class="flex-1 flex items-center justify-center relative" style="min-height:0; padding-top:8%;">
+                <div id="magnet-target" class="relative z-10 pointer-events-none transition-transform duration-100 ease-out"
+                     style="width: clamp(280px, 46vw, 560px); height: clamp(330px, 54vw, 660px);">
+                    <canvas id="avatar-canvas" style="width:100%;height:100%;object-fit:contain;display:block;"></canvas>
+                    <div class="absolute bottom-0 left-0 right-0" style="height:28%;background:linear-gradient(to bottom, transparent, #0C0C0C);"></div>
+                </div>
+            </div>
+
+            <!-- Bottom bar -->
+            <div class="flex justify-between items-end pb-6 relative z-30 flex-shrink-0">
+                <p class="text-[#D7E2EA] font-light uppercase tracking-wide leading-snug text-xs md:text-sm max-w-[160px] md:max-w-[260px] reveal stagger-2">
+                    Building premium web experiences for doctors, brands, and ideas that deserve better than a template.
+                </p>
+                <button onclick="window.location.href='mailto:hello@lashkari.com'" class="liquid-glass liquid-glass-strong rounded-full px-8 py-3 sm:px-10 sm:py-3.5 md:px-12 md:py-4 text-white font-medium uppercase tracking-widest text-xs sm:text-sm md:text-base flex items-center gap-2 group hover-scale reveal stagger-3">
+                    Contact Me
+                    <svg class="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section-bg min-h-screen w-full flex flex-col items-center justify-center px-5 sm:px-8 md:px-10 py-20 relative overflow-hidden">
+
+        <!-- Decorative 3D objects at corners -->
+        <!-- Top Left: Purple Sphere -->
+        <div class="absolute top-[4%] left-[2%] md:left-[4%] w-[120px] md:w-[200px] reveal" style="filter:drop-shadow(0 0 40px var(--accent-glow));">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="100%">
+                <defs>
+                    <radialGradient id="sg1" cx="35%" cy="30%" r="65%">
+                        <stop offset="0%" stop-color="#e879f9"/>
+                        <stop offset="40%" stop-color="var(--accent-2)"/>
+                        <stop offset="100%" stop-color="var(--accent-1)"/>
+                    </radialGradient>
+                    <radialGradient id="sg1h" cx="30%" cy="25%" r="25%">
+                        <stop offset="0%" stop-color="rgba(255,255,255,0.7)"/>
+                        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+                    </radialGradient>
+                </defs>
+                <circle cx="100" cy="100" r="95" fill="url(#sg1)"/>
+                <circle cx="70" cy="65" r="30" fill="url(#sg1h)"/>
+            </svg>
+        </div>
+
+        <!-- Top Right: Silver/Purple Torus (Fixed clipping coordinates) -->
+        <div class="absolute top-[4%] right-[2%] md:right-[4%] w-[120px] md:w-[200px] reveal stagger-1" style="filter:drop-shadow(0 0 40px var(--accent-glow));">
+            <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" width="100%">
+                <defs>
+                    <radialGradient id="tg1" cx="40%" cy="35%" r="70%">
+                        <stop offset="0%" stop-color="#e2e8f0"/>
+                        <stop offset="50%" stop-color="var(--accent-3)"/>
+                        <stop offset="100%" stop-color="var(--accent-1)"/>
+                    </radialGradient>
+                </defs>
+                <ellipse cx="120" cy="120" rx="95" ry="95" fill="none" stroke="url(#tg1)" stroke-width="38"/>
+                <ellipse cx="120" cy="120" rx="95" ry="95" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="8"/>
+            </svg>
+        </div>
+
+        <!-- Bottom Left: Orange/Purple Crystal -->
+        <div class="absolute bottom-[6%] left-[3%] md:left-[6%] w-[100px] md:w-[170px] reveal stagger-1" style="filter:drop-shadow(0 0 30px rgba(251,146,60,0.5));">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="100%">
+                <defs>
+                    <linearGradient id="cg1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#fb923c"/>
+                        <stop offset="50%" stop-color="#ec4899"/>
+                        <stop offset="100%" stop-color="var(--accent-1)"/>
+                    </linearGradient>
+                </defs>
+                <polygon points="100,10 170,60 155,150 45,150 30,60" fill="url(#cg1)" opacity="0.9"/>
+                <polygon points="100,10 170,60 100,50" fill="rgba(255,255,255,0.2)"/>
+                <polygon points="100,10 30,60 100,50" fill="rgba(0,0,0,0.15)"/>
+            </svg>
+        </div>
+
+        <!-- Bottom Right: Multi-sphere cluster -->
+        <div class="absolute bottom-[5%] right-[3%] md:right-[6%] w-[130px] md:w-[210px] reveal stagger-2" style="filter:drop-shadow(0 0 35px var(--accent-glow));">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="100%">
+                <defs>
+                    <radialGradient id="cl1" cx="35%" cy="30%" r="65%"><stop offset="0%" stop-color="#f97316"/><stop offset="100%" stop-color="#7c2d12"/></radialGradient>
+                    <radialGradient id="cl2" cx="35%" cy="30%" r="65%"><stop offset="0%" stop-color="#e879f9"/><stop offset="100%" stop-color="#4c1d95"/></radialGradient>
+                    <radialGradient id="cl3" cx="35%" cy="30%" r="65%"><stop offset="0%" stop-color="#94a3b8"/><stop offset="100%" stop-color="#1e293b"/></radialGradient>
+                    <radialGradient id="cl4" cx="35%" cy="30%" r="65%"><stop offset="0%" stop-color="#fb923c"/><stop offset="100%" stop-color="#92400e"/></radialGradient>
+                </defs>
+                <circle cx="80" cy="120" r="40" fill="url(#cl1)"/>
+                <circle cx="130" cy="110" r="32" fill="url(#cl2)"/>
+                <circle cx="65" cy="75" r="28" fill="url(#cl3)"/>
+                <circle cx="120" cy="65" r="24" fill="url(#cl4)"/>
+                <circle cx="155" cy="145" r="20" fill="url(#cl3)"/>
+                <circle cx="45" cy="148" r="16" fill="url(#cl2)"/>
+            </svg>
+        </div>
+
+        <div class="z-10 text-center max-w-3xl">
+            <h2 class="hero-heading font-black uppercase leading-none tracking-tighter text-[clamp(3.5rem,13vw,150px)] mb-12 md:mb-20 reveal">
+                About Me
+            </h2>
+
+            <!-- Styled paragraph matching reference image -->
+            <p class="leading-relaxed text-[clamp(0.95rem,1.8vw,1.25rem)] mb-12 md:mb-16 reveal stagger-1" style="font-weight:400;">
+                <span class="about-text-highlight">I'm an MBBS student who builds premium, animated web<br>experiences on the side — for doctors, clinics,</span>
+                <span style="color:#a78bfa;"> and brands</span><br>
+                <span class="about-text-fade">who want their site to feel as serious as their work. Every<br>project gets a custom design system, not a template. Let's<br>build something that actually stands out.</span>
+            </p>
+
+            <div class="flex justify-center reveal stagger-2">
+                <button onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})" class="about-btn-purple">
+                    Contact Me
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seamless Gradient Transition from About (#0C0C0C) to Services (#0f172a) -->
+    <div class="transition-about-services"></div>
+
+    <!-- Services Section (Navy Blue Theme) -->
+    <section id="services" class="w-full bg-navy text-navy-light px-5 sm:px-8 md:px-10 py-20 md:py-32 relative z-20">
+        <div class="text-center mb-16 md:mb-28">
+            <h2 class="navy-heading font-black uppercase text-[clamp(3rem,12vw,160px)] leading-none tracking-tighter reveal">
+                Services
+            </h2>
+        </div>
+
+        <div class="max-w-5xl mx-auto flex flex-col gap-0">
+            <div class="py-8 md:py-12 border-t border-slate-700 flex flex-col md:flex-row gap-6 md:gap-12 items-start reveal stagger-1">
+                <span class="font-black text-[clamp(3rem,10vw,140px)] leading-none text-navy-light">01</span>
+                <div class="flex-1 pt-4 md:pt-8">
+                    <h3 class="font-medium uppercase text-[clamp(1rem,2.2vw,2.1rem)] mb-4">Web Design</h3>
+                    <p class="font-light leading-relaxed max-w-2xl opacity-80 text-[clamp(0.85rem,1.6vw,1.25rem)]">Custom-built, animated websites for clinics, brands, and businesses — every project designed from scratch.</p>
+                </div>
+            </div>
+            <div class="py-8 md:py-12 border-t border-slate-700 flex flex-col md:flex-row gap-6 md:gap-12 items-start reveal stagger-1">
+                <span class="font-black text-[clamp(3rem,10vw,140px)] leading-none text-navy-light">02</span>
+                <div class="flex-1 pt-4 md:pt-8">
+                    <h3 class="font-medium uppercase text-[clamp(1rem,2.2vw,2.1rem)] mb-4">AI Tools & Automation</h3>
+                    <p class="font-light leading-relaxed max-w-2xl opacity-80 text-[clamp(0.85rem,1.6vw,1.25rem)]">Practical AI-powered tools and automations built into your website or workflow.</p>
+                </div>
+            </div>
+            <div class="py-8 md:py-12 border-t border-slate-700 flex flex-col md:flex-row gap-6 md:gap-12 items-start reveal stagger-1">
+                <span class="font-black text-[clamp(3rem,10vw,140px)] leading-none text-navy-light">03</span>
+                <div class="flex-1 pt-4 md:pt-8">
+                    <h3 class="font-medium uppercase text-[clamp(1rem,2.2vw,2.1rem)] mb-4">Custom 3D Experiences</h3>
+                    <p class="font-light leading-relaxed max-w-2xl opacity-80 text-[clamp(0.85rem,1.6vw,1.25rem)]">Interactive 3D product showcases and spatial walkthroughs for premium brands.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seamless Gradient Transition from Services (#0f172a) to Work (#0C0C0C) -->
+    <div class="transition-services-work"></div>
+
+    <!-- Projects Section (Seamlessly blended background) -->
+    <section id="work" class="w-full bg-[#0C0C0C] text-white px-5 sm:px-8 md:px-10 py-20 relative z-30">
+        <div class="text-center mb-16">
+            <h2 class="hero-heading font-black uppercase text-[clamp(3rem,12vw,160px)] leading-none tracking-tighter reveal">
+                Work
+            </h2>
+        </div>
+
+        <div class="max-w-7xl mx-auto space-y-4">
+            
+            <!-- 1. Smile Studio -->
+            <div class="h-[85vh] flex items-center justify-center sticky top-24 md:top-32 project-card transform transition-transform duration-200" style="top: 0px;">
+                <div class="w-full rounded-[40px] md:rounded-[60px] border-2 border-[#D7E2EA] bg-[#0C0C0C] p-4 md:p-8">
+                    <div class="flex justify-between items-center mb-6 px-2">
+                        <div class="flex items-center gap-4">
+                            <span class="text-sm font-medium text-[#D7E2EA]/60">01</span>
+                            <span class="uppercase tracking-widest text-sm font-medium text-[#D7E2EA]/60">Healthcare</span>
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-bold uppercase tracking-tight">Smile Studio</h3>
+                        <a href="https://dental-clinic-tau-khaki.vercel.app/" target="_blank" class="liquid-glass border border-[#D7E2EA] rounded-full px-6 py-2 text-sm font-medium uppercase tracking-widest text-[#D7E2EA] hover:bg-[#D7E2EA]/10 transition-colors">Live Project</a>
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-4 h-[65vh]">
+                        <div class="w-full md:w-[40%] flex flex-col gap-4">
+                            <div class="h-[clamp(130px,16vw,230px)] rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1629909615184-74f495363b67?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                            <div class="h-[clamp(160px,22vw,340px)] rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1606811971618-4486d14f3f99?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                        </div>
+                        <div class="w-full md:w-[60%] h-full rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Veridian -->
+            <div class="h-[85vh] flex items-center justify-center sticky top-24 md:top-32 project-card transform transition-transform duration-200" style="top: 28px;">
+                <div class="w-full rounded-[40px] md:rounded-[60px] border-2 border-[#D7E2EA] bg-[#0C0C0C] p-4 md:p-8">
+                    <div class="flex justify-between items-center mb-6 px-2">
+                        <div class="flex items-center gap-4">
+                            <span class="text-sm font-medium text-[#D7E2EA]/60">02</span>
+                            <span class="uppercase tracking-widest text-sm font-medium text-[#D7E2EA]/60">Real Estate</span>
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-bold uppercase tracking-tight">Veridian</h3>
+                        <a href="https://real-estast.vercel.app/" target="_blank" class="liquid-glass border border-[#D7E2EA] rounded-full px-6 py-2 text-sm font-medium uppercase tracking-widest text-[#D7E2EA] hover:bg-[#D7E2EA]/10 transition-colors">Live Project</a>
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-4 h-[65vh]">
+                        <div class="w-full md:w-[40%] flex flex-col gap-4">
+                            <div class="h-[clamp(130px,16vw,230px)] rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                            <div class="h-[clamp(160px,22vw,340px)] rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                        </div>
+                        <div class="w-full md:w-[60%] h-full rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Lumina Skin -->
+            <div class="h-[85vh] flex items-center justify-center sticky top-24 md:top-32 project-card transform transition-transform duration-200" style="top: 56px;">
+                <div class="w-full rounded-[40px] md:rounded-[60px] border-2 border-[#D7E2EA] bg-[#0C0C0C] p-4 md:p-8">
+                    <div class="flex justify-between items-center mb-6 px-2">
+                        <div class="flex items-center gap-4">
+                            <span class="text-sm font-medium text-[#D7E2EA]/60">03</span>
+                            <span class="uppercase tracking-widest text-sm font-medium text-[#D7E2EA]/60">Skincare</span>
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-bold uppercase tracking-tight">Lumina Skin</h3>
+                        <a href="https://lumina-skin-clinic.vercel.app/" target="_blank" class="liquid-glass border border-[#D7E2EA] rounded-full px-6 py-2 text-sm font-medium uppercase tracking-widest text-[#D7E2EA] hover:bg-[#D7E2EA]/10 transition-colors">Live Project</a>
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-4 h-[65vh]">
+                        <div class="w-full md:w-[40%] flex flex-col gap-4">
+                            <div class="h-[clamp(130px,16vw,230px)] rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                            <div class="h-[clamp(160px,22vw,340px)] rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                        </div>
+                        <div class="w-full md:w-[60%] h-full rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1596704017254-9b121068da31?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. HealthFirst -->
+            <div class="h-[85vh] flex items-center justify-center sticky top-24 md:top-32 project-card transform transition-transform duration-200" style="top: 84px;">
+                <div class="w-full rounded-[40px] md:rounded-[60px] border-2 border-[#D7E2EA] bg-[#0C0C0C] p-4 md:p-8">
+                    <div class="flex justify-between items-center mb-6 px-2">
+                        <div class="flex items-center gap-4">
+                            <span class="text-sm font-medium text-[#D7E2EA]/60">04</span>
+                            <span class="uppercase tracking-widest text-sm font-medium text-[#D7E2EA]/60">Medical</span>
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-bold uppercase tracking-tight">HealthFirst</h3>
+                        <a href="https://healthfirst-landing.vercel.app/" target="_blank" class="liquid-glass border border-[#D7E2EA] rounded-full px-6 py-2 text-sm font-medium uppercase tracking-widest text-[#D7E2EA] hover:bg-[#D7E2EA]/10 transition-colors">Live Project</a>
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-4 h-[65vh]">
+                        <div class="w-full md:w-[40%] flex flex-col gap-4">
+                            <div class="h-[clamp(130px,16vw,230px)] rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                            <div class="h-[clamp(160px,22vw,340px)] rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                        </div>
+                        <div class="w-full md:w-[60%] h-full rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Coffee Bean -->
+            <div class="h-[85vh] flex items-center justify-center sticky top-24 md:top-32 project-card transform transition-transform duration-200" style="top: 112px;">
+                <div class="w-full rounded-[40px] md:rounded-[60px] border-2 border-[#D7E2EA] bg-[#0C0C0C] p-4 md:p-8">
+                    <div class="flex justify-between items-center mb-6 px-2">
+                        <div class="flex items-center gap-4">
+                            <span class="text-sm font-medium text-[#D7E2EA]/60">05</span>
+                            <span class="uppercase tracking-widest text-sm font-medium text-[#D7E2EA]/60">F&B</span>
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-bold uppercase tracking-tight">Coffee Bean</h3>
+                        <a href="https://coffe-bean-tau.vercel.app/" target="_blank" class="liquid-glass border border-[#D7E2EA] rounded-full px-6 py-2 text-sm font-medium uppercase tracking-widest text-[#D7E2EA] hover:bg-[#D7E2EA]/10 transition-colors">Live Project</a>
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-4 h-[65vh]">
+                        <div class="w-full md:w-[40%] flex flex-col gap-4">
+                            <div class="h-[clamp(130px,16vw,230px)] rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                            <div class="h-[clamp(160px,22vw,340px)] rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                        </div>
+                        <div class="w-full md:w-[60%] h-full rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Seller -->
+            <div class="h-[85vh] flex items-center justify-center sticky top-24 md:top-32 project-card transform transition-transform duration-200" style="top: 140px;">
+                <div class="w-full rounded-[40px] md:rounded-[60px] border-2 border-[#D7E2EA] bg-[#0C0C0C] p-4 md:p-8">
+                    <div class="flex justify-between items-center mb-6 px-2">
+                        <div class="flex items-center gap-4">
+                            <span class="text-sm font-medium text-[#D7E2EA]/60">06</span>
+                            <span class="uppercase tracking-widest text-sm font-medium text-[#D7E2EA]/60">E-commerce</span>
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-bold uppercase tracking-tight">Seller</h3>
+                        <a href="https://seller-theta-liard.vercel.app/" target="_blank" class="liquid-glass border border-[#D7E2EA] rounded-full px-6 py-2 text-sm font-medium uppercase tracking-widest text-[#D7E2EA] hover:bg-[#D7E2EA]/10 transition-colors">Live Project</a>
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-4 h-[65vh]">
+                        <div class="w-full md:w-[40%] flex flex-col gap-4">
+                            <div class="h-[clamp(130px,16vw,230px)] rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                            <div class="h-[clamp(160px,22vw,340px)] rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                        </div>
+                        <div class="w-full md:w-[60%] h-full rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. The Master Key -->
+            <div class="h-[85vh] flex items-center justify-center sticky top-24 md:top-32 project-card transform transition-transform duration-200" style="top: 168px;">
+                <div class="w-full rounded-[40px] md:rounded-[60px] border-2 border-[#D7E2EA] bg-[#0C0C0C] p-4 md:p-8">
+                    <div class="flex justify-between items-center mb-6 px-2">
+                        <div class="flex items-center gap-4">
+                            <span class="text-sm font-medium text-[#D7E2EA]/60">07</span>
+                            <span class="uppercase tracking-widest text-sm font-medium text-[#D7E2EA]/60">Security</span>
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-bold uppercase tracking-tight">The Master Key</h3>
+                        <a href="https://the-master-key-frontend.vercel.app/" target="_blank" class="liquid-glass border border-[#D7E2EA] rounded-full px-6 py-2 text-sm font-medium uppercase tracking-widest text-[#D7E2EA] hover:bg-[#D7E2EA]/10 transition-colors">Live Project</a>
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-4 h-[65vh]">
+                        <div class="w-full md:w-[40%] flex flex-col gap-4">
+                            <div class="h-[clamp(130px,16vw,230px)] rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                            <div class="h-[clamp(160px,22vw,340px)] rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1526304640152-d4619684e484?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                        </div>
+                        <div class="w-full md:w-[60%] h-full rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. ZAPP -->
+            <div class="h-[85vh] flex items-center justify-center sticky top-24 md:top-32 project-card transform transition-transform duration-200" style="top: 196px;">
+                <div class="w-full rounded-[40px] md:rounded-[60px] border-2 border-[#D7E2EA] bg-[#0C0C0C] p-4 md:p-8">
+                    <div class="flex justify-between items-center mb-6 px-2">
+                        <div class="flex items-center gap-4">
+                            <span class="text-sm font-medium text-[#D7E2EA]/60">08</span>
+                            <span class="uppercase tracking-widest text-sm font-medium text-[#D7E2EA]/60">Energy</span>
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-bold uppercase tracking-tight">ZAPP</h3>
+                        <a href="https://zappp.vercel.app/" target="_blank" class="liquid-glass border border-[#D7E2EA] rounded-full px-6 py-2 text-sm font-medium uppercase tracking-widest text-[#D7E2EA] hover:bg-[#D7E2EA]/10 transition-colors">Live Project</a>
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-4 h-[65vh]">
+                        <div class="w-full md:w-[40%] flex flex-col gap-4">
+                            <div class="h-[clamp(130px,16vw,230px)] rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                            <div class="h-[clamp(160px,22vw,340px)] rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                        </div>
+                        <div class="w-full md:w-[60%] h-full rounded-[40px] md:rounded-[50px] overflow-hidden"><img src="https://images.unsplash.com/photo-1618898909019-010e4e234c55?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" /></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-[#0C0C0C] pt-20 pb-10 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col items-center text-center">
+            <h2 class="hero-heading font-black text-5xl md:text-7xl uppercase tracking-tighter mb-8 reveal">Let's Talk</h2>
+            <p class="text-[#D7E2EA] max-w-md mb-10 text-lg reveal stagger-1">Ready to start a project? Send me an email and let's create something extraordinary.</p>
+            
+            <a href="mailto:hello@lashkari.com" class="mb-16 block reveal stagger-2">
+                <button class="liquid-glass liquid-glass-strong rounded-full px-8 py-3 sm:px-10 sm:py-3.5 md:px-12 md:py-4 text-white font-medium uppercase tracking-widest text-xs sm:text-sm md:text-base flex items-center gap-2 group hover-scale">
+                    Contact Me
+                    <svg class="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+                </button>
+            </a>
+
+            <div class="flex gap-6 mb-8 reveal stagger-3">
+                <a href="#" class="text-white/50 hover:text-white transition-colors"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+                <a href="#" class="text-white/50 hover:text-white transition-colors"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-12.7 12.5S2.5 8.5 5 2.3c2.9-1 5.5.7 7.3 2.5 3.2-1 6-1 6-1z"/></svg></a>
+                <a href="mailto:hello@lashkari.com" class="text-white/50 hover:text-white transition-colors"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></a>
+            </div>
+            <div class="text-white/30 text-sm uppercase tracking-widest">© 2024 Lashkari Group. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <!-- Settings Panel (Drawer) -->
+    <div id="settings-drawer" class="fixed top-0 right-0 h-full w-[320px] z-50 bg-[#0C0C0C]/85 backdrop-blur-xl border-l border-white/10 translate-x-full transition-transform duration-300 ease-in-out p-8 flex flex-col justify-between shadow-[-10px_0_40px_rgba(0,0,0,0.6)]">
+        <div class="flex flex-col gap-8">
+            <div class="flex justify-between items-center pb-4 border-b border-white/10">
+                <h3 class="text-white font-bold uppercase tracking-widest text-sm">Design Settings</h3>
+                <button id="close-settings-btn" class="w-8 h-8 rounded-full flex items-center justify-center text-white/50 hover:text-white hover:bg-white/5 transition-all">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            
+            <div>
+                <span class="text-xs uppercase tracking-widest text-white/40 mb-4 block font-semibold">Accent Palette</span>
+                <div class="grid grid-cols-1 gap-3">
+                    <button onclick="setAccentTheme('purple')" class="theme-option-btn flex items-center justify-between px-4 py-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-white/10 hover:bg-white/[0.05] transition-all text-sm text-left text-white/80 hover:text-white" data-theme="purple">
+                        <span class="flex items-center gap-3">
+                            <span class="w-3.5 h-3.5 rounded-full bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.6)]"></span>
+                            Purple Glow
+                        </span>
+                        <span class="theme-status text-[10px] text-purple-400 uppercase tracking-widest">Active</span>
+                    </button>
+                    <button onclick="setAccentTheme('emerald')" class="theme-option-btn flex items-center justify-between px-4 py-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-white/10 hover:bg-white/[0.05] transition-all text-sm text-left text-white/80 hover:text-white" data-theme="emerald">
+                        <span class="flex items-center gap-3">
+                            <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.6)]"></span>
+                            Emerald Glow
+                        </span>
+                        <span class="theme-status text-[10px] text-emerald-400 uppercase tracking-widest opacity-0">Select</span>
+                    </button>
+                    <button onclick="setAccentTheme('blue')" class="theme-option-btn flex items-center justify-between px-4 py-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-white/10 hover:bg-white/[0.05] transition-all text-sm text-left text-white/80 hover:text-white" data-theme="blue">
+                        <span class="flex items-center gap-3">
+                            <span class="w-3.5 h-3.5 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.6)]"></span>
+                            Blue Glow
+                        </span>
+                        <span class="theme-status text-[10px] text-blue-400 uppercase tracking-widest opacity-0">Select</span>
+                    </button>
+                    <button onclick="setAccentTheme('orange')" class="theme-option-btn flex items-center justify-between px-4 py-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-white/10 hover:bg-white/[0.05] transition-all text-sm text-left text-white/80 hover:text-white" data-theme="orange">
+                        <span class="flex items-center gap-3">
+                            <span class="w-3.5 h-3.5 rounded-full bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.6)]"></span>
+                            Orange Glow
+                        </span>
+                        <span class="theme-status text-[10px] text-orange-400 uppercase tracking-widest opacity-0">Select</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-[10px] text-white/30 text-center uppercase tracking-widest border-t border-white/5 pt-4">
+            Lashkari v1.2
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script>
+        // ── Intersection Observer for reveal animations ──
+        const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, observerOptions);
+        document.querySelectorAll('.reveal, .word-reveal').forEach(el => observer.observe(el));
+
+
+        // ── Sticky project card scale effect ──
+        window.addEventListener('scroll', () => {
+            const cards = document.querySelectorAll('.project-card');
+            cards.forEach((card, index) => {
+                const rect = card.getBoundingClientRect();
+                const viewportHeight = window.innerHeight;
+                if(rect.top < viewportHeight && rect.bottom > 0) {
+                    const progress = Math.min(Math.max((viewportHeight - rect.top) / viewportHeight, 0), 1);
+                    const scale = 1 - ((cards.length - 1 - index) * 0.02) - (progress * 0.03);
+                    card.style.transform = `scale(${scale})`;
+                }
+            });
+        });
+
+        // ── Chroma Key: remove green screen from avatar (fixed shoulder crop) ──
+        (function() {
+            const canvas = document.getElementById('avatar-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.src = 'avatar-green.png';
+
+            img.onload = function() {
+                const fullW = img.naturalWidth;
+                const fullH = img.naturalHeight;
+
+                // Use the full width of the image so the shoulder doesn't get clipped
+                canvas.width  = fullW;
+                canvas.height = fullH;
+
+                ctx.drawImage(img, 0, 0);
+
+                // Erase Gemini star: it sits strictly in bottom-right corner of image (~90-100% x, ~85-100% y)
+                // Clearing from 90% of width and 85% of height preserves the avatar shoulder completely
+                ctx.clearRect(Math.floor(fullW * 0.90), Math.floor(fullH * 0.85), fullW, fullH);
+
+                const imageData = ctx.getImageData(0, 0, fullW, fullH);
+                const d = imageData.data;
+
+                for (let i = 0; i < d.length; i += 4) {
+                    const r = d[i], g = d[i+1], b = d[i+2];
+                    if (g > 90 && g > r * 1.35 && g > b * 1.35) {
+                        const greenness = Math.min(1, (g - Math.max(r, b)) / 80);
+                        d[i+3] = Math.round(d[i+3] * (1 - greenness));
+                    }
+                }
+                ctx.putImageData(imageData, 0, 0);
+            };
+
+            img.onerror = function() {
+                console.warn('Avatar image failed to load.');
+            };
+        })();
+
+        // ── Theme Settings Drawer Logic ──
+        const settingsBtn = document.getElementById('settings-btn');
+        const settingsDrawer = document.getElementById('settings-drawer');
+        const closeSettingsBtn = document.getElementById('close-settings-btn');
+
+        if(settingsBtn && settingsDrawer && closeSettingsBtn) {
+            settingsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                settingsDrawer.classList.toggle('translate-x-full');
+            });
+            closeSettingsBtn.addEventListener('click', () => {
+                settingsDrawer.classList.add('translate-x-full');
+            });
+            // Close on click outside
+            document.addEventListener('click', (e) => {
+                if(!settingsDrawer.contains(e.target) && !settingsBtn.contains(e.target)) {
+                    settingsDrawer.classList.add('translate-x-full');
+                }
+            });
+        }
+
+        // ── Theme Management ──
+        function setAccentTheme(themeName) {
+            const themes = {
+                purple: {
+                    a1: '#7c3aed',
+                    a2: '#a855f7',
+                    a3: '#c084fc',
+                    glow: 'rgba(168, 85, 247, 0.4)'
+                },
+                emerald: {
+                    a1: '#059669',
+                    a2: '#10b981',
+                    a3: '#34d399',
+                    glow: 'rgba(16, 185, 129, 0.4)'
+                },
+                blue: {
+                    a1: '#2563eb',
+                    a2: '#3b82f6',
+                    a3: '#60a5fa',
+                    glow: 'rgba(59, 130, 246, 0.4)'
+                },
+                orange: {
+                    a1: '#ea580c',
+                    a2: '#f97316',
+                    a3: '#fb923c',
+                    glow: 'rgba(249, 115, 22, 0.4)'
+                }
+            };
+            const theme = themes[themeName] || themes.purple;
+            document.documentElement.style.setProperty('--accent-1', theme.a1);
+            document.documentElement.style.setProperty('--accent-2', theme.a2);
+            document.documentElement.style.setProperty('--accent-3', theme.a3);
+            document.documentElement.style.setProperty('--accent-glow', theme.glow);
+            localStorage.setItem('selected-theme', themeName);
+
+            // Update UI buttons indicators
+            document.querySelectorAll('.theme-option-btn').forEach(btn => {
+                const indicator = btn.querySelector('.theme-status');
+                const isCurrent = btn.getAttribute('data-theme') === themeName;
+                if (indicator) {
+                    indicator.textContent = isCurrent ? 'Active' : 'Select';
+                    if (isCurrent) {
+                        indicator.classList.remove('opacity-0');
+                    } else {
+                        indicator.classList.add('opacity-0');
+                    }
+                }
+                if (isCurrent) {
+                    btn.classList.add('border-white/20', 'bg-white/[0.08]');
+                } else {
+                    btn.classList.remove('border-white/20', 'bg-white/[0.08]');
+                }
+            });
+        }
+
+        // Initialize theme from storage
+        const savedTheme = localStorage.getItem('selected-theme') || 'purple';
+        setAccentTheme(savedTheme);
+
+        // ── Spotlight Reveal Logic (Geology reveal overlay + Soft ambient glow) ──
+        (function() {
+            const revealLayer = document.getElementById('hero-reveal-layer');
+            const cursorGlow = document.getElementById('hero-cursor-glow');
+            if (!revealLayer) return;
+
+            const maskCanvas = document.createElement('canvas');
+            maskCanvas.style.display = 'none';
+            document.body.appendChild(maskCanvas);
+            const maskCtx = maskCanvas.getContext('2d');
+
+            const cachedRect = { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
+
+            function resizeMaskCanvas() {
+                cachedRect.width = window.innerWidth;
+                cachedRect.height = window.innerHeight;
+                cachedRect.left = 0;
+                cachedRect.top = 0;
+                maskCanvas.width = Math.floor(window.innerWidth / 2);
+                maskCanvas.height = Math.floor(window.innerHeight / 2);
+            }
+            window.addEventListener('resize', resizeMaskCanvas);
+            resizeMaskCanvas();
+
+            const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+            const smooth = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+            const SPOTLIGHT_R = 360; // Soft wide radius
+
+            window.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX - cachedRect.left;
+                mouse.y = e.clientY - cachedRect.top;
+            });
+
+            function updateSpotlight() {
+                // Lerp mouse coordinates
+                smooth.x += (mouse.x - smooth.x) * 0.1;
+                smooth.y += (mouse.y - smooth.y) * 0.1;
+
+                const cw = maskCanvas.width;
+                const ch = maskCanvas.height;
+
+                if (cw > 0 && ch > 0) {
+                    maskCtx.clearRect(0, 0, cw, ch);
+
+                    // Scale coordinates for the half-res canvas
+                    const scaleX = cw / cachedRect.width;
+                    const scaleY = ch / cachedRect.height;
+                    const cx = smooth.x * scaleX;
+                    const cy = smooth.y * scaleY;
+                    const r = SPOTLIGHT_R * scaleX;
+
+                    // Stretch context to create a horizontal ellipse shape (not round)
+                    maskCtx.save();
+                    maskCtx.translate(cx, cy);
+                    maskCtx.scale(1.5, 0.85); // Stretches width by 1.5x, squashes height by 0.85x
+
+                    const grad = maskCtx.createRadialGradient(0, 0, 0, 0, 0, r);
+                    // Extremely diffuse stops to form a soft ambient glow, removing hard round borders
+                    grad.addColorStop(0, 'rgba(255,255,255,1)');
+                    grad.addColorStop(0.2, 'rgba(255,255,255,0.85)');
+                    grad.addColorStop(0.6, 'rgba(255,255,255,0.3)');
+                    grad.addColorStop(1, 'rgba(255,255,255,0)');
+
+                    maskCtx.fillStyle = grad;
+                    maskCtx.beginPath();
+                    maskCtx.arc(0, 0, r, 0, Math.PI * 2);
+                    maskCtx.fill();
+                    maskCtx.restore();
+
+                    // Apply bottom fade mask directly to the spotlight reveal canvas to blend seamlessly
+                    maskCtx.globalCompositeOperation = 'destination-in';
+                    const bottomFade = maskCtx.createLinearGradient(0, 0, 0, ch);
+                    bottomFade.addColorStop(0, 'rgba(255,255,255,1)');
+                    bottomFade.addColorStop(0.6, 'rgba(255,255,255,1)');
+                    bottomFade.addColorStop(0.95, 'rgba(255,255,255,0)');
+                    maskCtx.fillStyle = bottomFade;
+                    maskCtx.fillRect(0, 0, cw, ch);
+                    maskCtx.globalCompositeOperation = 'source-over';
+
+                    const maskDataUrl = maskCanvas.toDataURL('image/png');
+                    revealLayer.style.maskImage = `url(${maskDataUrl})`;
+                    revealLayer.style.webkitMaskImage = `url(${maskDataUrl})`;
+                }
+
+                if (cursorGlow) {
+                    cursorGlow.style.left = `${smooth.x}px`;
+                    cursorGlow.style.top = `${smooth.y}px`;
+                }
+
+                requestAnimationFrame(updateSpotlight);
+            }
+            requestAnimationFrame(updateSpotlight);
+        })();
+    </script>
+</body>
+</html>
