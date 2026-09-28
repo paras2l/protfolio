@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paras Lashkari — Web & 3D Experiences</title>
-    <meta name="description" content="MBBS student building premium, animated web & 3D experiences for doctors, clinics, and high-trust brands. Custom design systems, 0 templates.">
+    <title>LGC — Lashkari Group of Companies | Ventures & Digital Portfolio</title>
+    <meta name="description" content="Official venture and enterprise portfolio of Lashkari Group of Companies (LGC). Handcrafted digital platforms, clinical ecosystems, luxury real estate, and scalable ventures.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a855f7' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M3 12h3l3-9 3 18 3-12h3l2-3 2 3'/></svg>">
 
     <!-- Google Fonts: Kanit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,6 +34,14 @@
         }
     </script>
 
+    <!-- Safe Early Handlers -->
+    <script>
+        window.hideIframeLoader = function() {
+            var loader = document.getElementById('iframe-loader');
+            if (loader) loader.style.opacity = '0';
+        };
+    </script>
+
     <style>
         :root {
             --accent-1: #7c3aed;
@@ -37,6 +49,8 @@
             --accent-3: #c084fc;
             --accent-glow: rgba(168, 85, 247, 0.4);
             --accent-glow-subtle: rgba(168, 85, 247, 0.15);
+            --spot-x: 50%;
+            --spot-y: 50%;
         }
         
         /* Base Styles */
@@ -192,24 +206,27 @@
         .project-img { transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
         .project-card:hover .project-img { transform: scale(1.08); }
 
-        /* Hero Typography */
-        .hero-title {
-            font-size: clamp(2.75rem, 10.5vw, 11rem);
-            line-height: 0.95;
-            white-space: nowrap;
+        /* Responsive Mobile Sticky Behavior */
+        @media (max-width: 768px) {
+            .project-card {
+                position: relative !important;
+                top: 0 !important;
+                margin-bottom: 24px !important;
+                transform: none !important;
+            }
         }
 
-        /* Avatar Canvas */
-        #avatar-canvas {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+        /* Hero Typography */
+        .hero-title {
+            font-size: clamp(2.5rem, 9.5vw, 10rem);
+            line-height: 0.95;
+            white-space: nowrap;
         }
 
         /* About Section Custom */
         .about-section-bg { background: #0C0C0C; }
         .about-text-highlight { color: #ffffff; font-weight: 700; }
-        .about-text-fade { color: rgba(215,226,234,0.55); font-weight: 300; }
+        .about-text-fade { color: rgba(215,226,234,0.65); font-weight: 300; }
 
         .about-btn-purple {
             background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%);
@@ -233,7 +250,7 @@
             box-shadow: 0 0 35px var(--accent-glow);
         }
 
-        /* Hero Zoom & Layers */
+        /* Hero Zoom & GPU Spotlight Layers */
         @keyframes heroZoom { 0%{transform:scale(1.12)} 100%{transform:scale(1)} }
         .hero-zoom {
             animation: heroZoom 1.8s cubic-bezier(0.16,1,0.3,1) forwards;
@@ -241,6 +258,18 @@
             -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 95%);
             mask-repeat: no-repeat;
             -webkit-mask-repeat: no-repeat;
+        }
+
+        #hero-reveal-layer {
+            -webkit-mask-image: radial-gradient(460px 320px at var(--spot-x, 50%) var(--spot-y, 50%), #000 0%, rgba(0,0,0,0.85) 30%, rgba(0,0,0,0.2) 65%, transparent 100%), linear-gradient(to bottom, #000 60%, transparent 95%);
+            -webkit-mask-composite: source-in;
+            mask-image: radial-gradient(460px 320px at var(--spot-x, 50%) var(--spot-y, 50%), #000 0%, rgba(0,0,0,0.85) 30%, rgba(0,0,0,0.2) 65%, transparent 100%), linear-gradient(to bottom, #000 60%, transparent 95%);
+            mask-composite: intersect;
+            will-change: mask-image, -webkit-mask-image;
+        }
+
+        #hero-cursor-glow {
+            will-change: transform;
         }
 
         .hero-fade-overlay {
@@ -308,41 +337,44 @@
         </div>
         <div>
             <div id="toast-title" class="text-xs font-bold uppercase tracking-wider text-white">Copied to Clipboard!</div>
-            <div id="toast-message" class="text-xs text-[#D7E2EA]/80 font-mono">paras.l.d.2006@gmail.com</div>
+            <div id="toast-message" class="text-xs text-[#D7E2EA]/80 font-mono">lashkarigroupofcompanies@gmail.com</div>
         </div>
     </div>
 
     <!-- Navbar -->
     <nav class="fixed top-0 w-full z-50 px-6 md:px-10 pt-5 md:pt-7 transition-all duration-300" id="main-navbar">
         <div class="flex justify-between items-center max-w-7xl mx-auto">
-            <!-- Logo with Heartbeat Symbol -->
+            <!-- LGC Brand Logo -->
             <a href="#" class="flex items-center gap-3 group magnetic-item" data-sound="hover">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--accent-1)] to-[var(--accent-2)] flex items-center justify-center shadow-[0_0_20px_var(--accent-glow)] group-hover:rotate-12 transition-transform duration-300">
                     <svg class="text-white w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M3 12h3l3-9 3 18 3-12h3l2-3 2 3" />
                     </svg>
                 </div>
-                <span class="text-xl md:text-2xl font-black text-white tracking-tighter">LASHKARI.</span>
+                <div class="flex flex-col">
+                    <span class="text-xl md:text-2xl font-black text-white tracking-tighter leading-none">LGC</span>
+                    <span class="text-[8px] uppercase tracking-widest text-[#D7E2EA]/60 font-semibold mt-0.5">Lashkari Group</span>
+                </div>
             </a>
             
             <!-- Navigation Links -->
             <div class="hidden md:flex items-center gap-8 liquid-glass rounded-full px-8 py-3 border border-white/10 shadow-lg">
                 <a href="#about" class="text-[#D7E2EA] font-medium uppercase tracking-wider hover:text-white transition-colors text-sm magnetic-item" data-sound="hover">About</a>
-                <a href="#services" class="text-[#D7E2EA] font-medium uppercase tracking-wider hover:text-white transition-colors text-sm magnetic-item" data-sound="hover">Services</a>
-                <a href="#highlights" class="text-[#D7E2EA] font-medium uppercase tracking-wider hover:text-white transition-colors text-sm magnetic-item" data-sound="hover">Highlights</a>
-                <a href="#work" class="text-[#D7E2EA] font-medium uppercase tracking-wider hover:text-white transition-colors text-sm magnetic-item" data-sound="hover">Work</a>
+                <a href="#services" class="text-[#D7E2EA] font-medium uppercase tracking-wider hover:text-white transition-colors text-sm magnetic-item" data-sound="hover">Capabilities</a>
+                <a href="#highlights" class="text-[#D7E2EA] font-medium uppercase tracking-wider hover:text-white transition-colors text-sm magnetic-item" data-sound="hover">Standards</a>
+                <a href="#work" class="text-[#D7E2EA] font-medium uppercase tracking-wider hover:text-white transition-colors text-sm magnetic-item" data-sound="hover">Ventures</a>
                 <a href="#contact" class="text-[#D7E2EA] font-medium uppercase tracking-wider hover:text-white transition-colors text-sm magnetic-item" data-sound="hover">Contact</a>
             </div>
             
             <!-- Navbar Actions -->
             <div class="flex items-center gap-3 md:gap-4">
-                <!-- Live Availability Badge -->
+                <!-- Live Portfolio Status Badge -->
                 <div class="hidden lg:flex items-center gap-2 px-3.5 py-1.5 rounded-full liquid-glass text-xs font-medium uppercase tracking-wider border border-white/10 text-emerald-300">
                     <span class="relative flex h-2 w-2">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                     </span>
-                    Available for Q3/Q4
+                    Ventures & Co. • Active
                 </div>
 
                 <!-- Ambient Sound Toggle Pill -->
@@ -375,7 +407,10 @@
     <!-- Mobile Navigation Drawer Overlay -->
     <div id="mobile-drawer" class="fixed inset-0 z-50 bg-[#0C0C0C]/95 backdrop-blur-2xl transition-all duration-500 opacity-0 pointer-events-none flex flex-col justify-between p-8">
         <div class="flex justify-between items-center pb-6 border-b border-white/10">
-            <span class="text-xl font-black text-white tracking-tighter">LASHKARI.</span>
+            <div class="flex items-center gap-2">
+                <span class="text-xl font-black text-white tracking-tighter">LGC</span>
+                <span class="text-xs uppercase tracking-widest text-[#D7E2EA]/60 font-semibold">• Lashkari Group</span>
+            </div>
             <button id="close-mobile-drawer" class="w-10 h-10 rounded-full liquid-glass flex items-center justify-center text-white" aria-label="Close Navigation">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
@@ -383,17 +418,17 @@
 
         <div class="flex flex-col gap-6 text-center my-auto">
             <a href="#about" class="mobile-nav-link text-3xl font-bold uppercase tracking-tight text-[#D7E2EA] hover:text-white transition-colors">About</a>
-            <a href="#services" class="mobile-nav-link text-3xl font-bold uppercase tracking-tight text-[#D7E2EA] hover:text-white transition-colors">Services</a>
-            <a href="#highlights" class="mobile-nav-link text-3xl font-bold uppercase tracking-tight text-[#D7E2EA] hover:text-white transition-colors">Highlights</a>
-            <a href="#work" class="mobile-nav-link text-3xl font-bold uppercase tracking-tight text-[#D7E2EA] hover:text-white transition-colors">Work</a>
+            <a href="#services" class="mobile-nav-link text-3xl font-bold uppercase tracking-tight text-[#D7E2EA] hover:text-white transition-colors">Capabilities</a>
+            <a href="#highlights" class="mobile-nav-link text-3xl font-bold uppercase tracking-tight text-[#D7E2EA] hover:text-white transition-colors">Standards</a>
+            <a href="#work" class="mobile-nav-link text-3xl font-bold uppercase tracking-tight text-[#D7E2EA] hover:text-white transition-colors">Ventures</a>
             <a href="#contact" class="mobile-nav-link text-3xl font-bold uppercase tracking-tight text-[#D7E2EA] hover:text-white transition-colors">Contact</a>
         </div>
 
         <div class="flex flex-col gap-4 text-center">
             <button onclick="copyEmailToClipboard()" class="about-btn-purple w-full justify-center">
-                Copy Email (1-Click)
+                Copy LGC Email (1-Click)
             </button>
-            <div class="text-xs uppercase tracking-widest text-white/40">paras.l.d.2006@gmail.com</div>
+            <div class="text-xs uppercase tracking-widest text-white/50 font-mono">lashkarigroupofcompanies@gmail.com</div>
         </div>
     </div>
 
@@ -406,35 +441,39 @@
         <div id="hero-cursor-glow" class="absolute pointer-events-none z-11"
              style="width: 900px; height: 500px; border-radius: 50%; background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%); transform: translate(-50%, -50%); mix-blend-mode: screen; filter: blur(40px); opacity: 0.85; left: 50%; top: 50%;"></div>
         <div id="hero-reveal-layer" class="absolute inset-0 bg-center bg-cover bg-no-repeat z-12 pointer-events-none" 
-             style="background-image: url('https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260609_201152_bba90a12-bf12-459f-91f0-51f237dbaf3b.png&w=1280&q=85'); mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;"></div>
+             style="background-image: url('https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260609_201152_bba90a12-bf12-459f-91f0-51f237dbaf3b.png&w=1280&q=85');"></div>
         <!-- Fade overlay to blend hero into About seamlessly -->
         <div class="hero-fade-overlay"></div>
 
         <div class="flex-1 flex flex-col pt-24 px-6 md:px-10 relative z-20 h-full max-w-7xl mx-auto w-full">
             
-            <!-- Big Heading -->
+            <!-- Company Big Heading -->
             <div class="text-center relative z-30 pt-4">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full liquid-glass text-xs font-semibold uppercase tracking-widest text-white/80 mb-3 reveal active">
+                    <span class="w-2 h-2 rounded-full bg-[var(--accent-2)] animate-pulse"></span>
+                    Lashkari Group of Companies
+                </div>
                 <h1 class="hero-heading hero-title font-black uppercase tracking-tighter reveal active">
-                    I'm Lashkari
+                    LGC VENTURES
                 </h1>
             </div>
 
             <!-- Avatar shifted slightly below center with magnetic response -->
-            <div class="flex-1 flex items-center justify-center relative" style="min-height:0; padding-top:6%;">
+            <div class="flex-1 flex items-center justify-center relative" style="min-height:0; padding-top:4%;">
                 <div id="magnet-target" class="relative z-10 pointer-events-none transition-transform duration-150 ease-out"
-                     style="width: clamp(280px, 46vw, 560px); height: clamp(330px, 54vw, 660px);">
-                    <canvas id="avatar-canvas" style="width:100%;height:100%;object-fit:contain;display:block;"></canvas>
+                     style="width: clamp(280px, 44vw, 540px); height: clamp(320px, 50vw, 620px);">
+                    <img src="avatar-clean.webp" alt="Lashkari Group Founder" class="w-full h-full object-contain block drop-shadow-[0_10px_35px_rgba(0,0,0,0.8)]" />
                     <div class="absolute bottom-0 left-0 right-0" style="height:28%;background:linear-gradient(to bottom, transparent, #0C0C0C);"></div>
                 </div>
             </div>
 
             <!-- Bottom bar -->
             <div class="flex justify-between items-end pb-8 relative z-30 flex-shrink-0">
-                <p class="text-[#D7E2EA] font-light uppercase tracking-wide leading-snug text-xs md:text-sm max-w-[160px] md:max-w-[280px] reveal stagger-2">
-                    Building premium web experiences for doctors, clinics, and brands that deserve better than a template.
+                <p class="text-[#D7E2EA] font-light uppercase tracking-wide leading-snug text-xs md:text-sm max-w-[180px] md:max-w-[320px] reveal stagger-2">
+                    Engineering, scaling, and managing premier digital platforms, clinical ecosystems, and luxury ventures under Lashkari Group of Companies.
                 </p>
                 <button onclick="copyEmailToClipboard()" class="liquid-glass liquid-glass-strong rounded-full px-8 py-3.5 sm:px-10 sm:py-4 text-white font-medium uppercase tracking-widest text-xs sm:text-sm md:text-base flex items-center gap-2 group hover-scale reveal stagger-3 magnetic-item" data-sound="click">
-                    <span>Contact Me</span>
+                    <span>Connect With LGC</span>
                     <svg class="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
                 </button>
             </div>
@@ -446,47 +485,47 @@
 
         <!-- 3D Parallax Floating Element 1 (Top Left: Sphere 3D) -->
         <div class="absolute top-[6%] left-[2%] md:left-[6%] w-[110px] sm:w-[150px] md:w-[210px] pointer-events-none parallax-item animate-float-1 z-10" data-parallax-speed="0.04" style="filter:drop-shadow(0 0 35px var(--accent-glow));">
-            <canvas class="chroma-3d-canvas w-full h-auto block" data-src="sphere_3d.png?v=3" data-mask="circle"></canvas>
+            <img src="sphere_3d-clean.webp" alt="3D Sphere" class="w-full h-auto block" loading="lazy" decoding="async" />
         </div>
 
         <!-- 3D Parallax Floating Element 2 (Top Right: Torus 3D) -->
         <div class="absolute top-[6%] right-[2%] md:right-[6%] w-[110px] sm:w-[150px] md:w-[210px] pointer-events-none parallax-item animate-float-2 z-10" data-parallax-speed="-0.04" style="filter:drop-shadow(0 0 35px var(--accent-glow));">
-            <canvas class="chroma-3d-canvas w-full h-auto block" data-src="torus_3d.png?v=3"></canvas>
+            <img src="torus_3d-clean.webp" alt="3D Torus" class="w-full h-auto block" loading="lazy" decoding="async" />
         </div>
 
         <!-- 3D Parallax Floating Element 3 (Bottom Left: Crystal 3D) -->
         <div class="absolute bottom-[8%] left-[2%] md:left-[7%] w-[90px] sm:w-[130px] md:w-[180px] pointer-events-none parallax-item animate-float-3 z-10" data-parallax-speed="0.05" style="filter:drop-shadow(0 0 30px rgba(251,146,60,0.5));">
-            <canvas class="chroma-3d-canvas w-full h-auto block" data-src="crystal_3d.png?v=3"></canvas>
+            <img src="crystal_3d-clean.webp" alt="3D Crystal" class="w-full h-auto block" loading="lazy" decoding="async" />
         </div>
 
         <!-- 3D Parallax Floating Element 4 (Bottom Right: Cluster 3D) -->
         <div class="absolute bottom-[7%] right-[2%] md:right-[7%] w-[110px] sm:w-[160px] md:w-[220px] pointer-events-none parallax-item animate-float-4 z-10" data-parallax-speed="-0.05" style="filter:drop-shadow(0 0 35px var(--accent-glow));">
-            <canvas class="chroma-3d-canvas w-full h-auto block" data-src="cluster_3d.png?v=3"></canvas>
+            <img src="cluster_3d-clean.webp" alt="3D Cluster" class="w-full h-auto block" loading="lazy" decoding="async" />
         </div>
 
         <div class="z-20 text-center max-w-4xl relative">
             <div class="inline-block px-4 py-1.5 rounded-full liquid-glass text-xs uppercase tracking-widest text-white/70 font-semibold mb-6 reveal">
-                Doctor by Training • Designer by Passion
+                Lashkari Group of Companies • Corporate Portfolio
             </div>
 
             <h2 class="hero-heading font-black uppercase leading-none tracking-tighter text-[clamp(3.5rem,13vw,140px)] mb-8 md:mb-14 reveal">
-                About Me
+                About LGC
             </h2>
 
             <!-- Styled paragraph -->
             <p class="leading-relaxed text-[clamp(1.05rem,2vw,1.35rem)] mb-10 md:mb-14 reveal stagger-1 max-w-3xl mx-auto" style="font-weight:400;">
-                <span class="about-text-highlight">I'm an MBBS student who builds premium, animated web experiences on the side</span> — 
-                <span class="accent-gradient-text font-semibold">for doctors, clinics, and high-trust brands</span> 
-                <span class="about-text-fade">who want their digital presence to feel as precise and authoritative as their medical practice. Every project receives a custom design system, handcrafted 3D motion, and 0 bloated templates.</span>
+                <span class="about-text-highlight">Lashkari Group of Companies (LGC) builds, manages, and scales an elite ecosystem of high-trust enterprises</span> — 
+                <span class="accent-gradient-text font-semibold">spanning clinical healthcare suites, luxury architectural real estate, and modern digital commerce.</span> 
+                <span class="about-text-fade">Every venture under our corporate umbrella receives bespoke architecture, proprietary design systems, and zero-compromise precision.</span>
             </p>
 
             <div class="flex flex-wrap justify-center gap-4 reveal stagger-2">
                 <button onclick="copyEmailToClipboard()" class="about-btn-purple magnetic-item" data-sound="click">
-                    <span>Contact Me</span>
+                    <span>Connect With LGC</span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
                 </button>
                 <a href="#work" class="liquid-glass rounded-full px-8 py-3.5 text-sm uppercase tracking-widest text-white font-medium hover:bg-white/10 transition-colors flex items-center gap-2 magnetic-item" data-sound="hover">
-                    <span>Explore Work</span>
+                    <span>Explore Ventures</span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
                 </a>
             </div>
@@ -496,11 +535,11 @@
     <!-- Seamless Gradient Transition from About (#0C0C0C) to Services (#0f172a) -->
     <div class="transition-about-services"></div>
 
-    <!-- Services Section (Navy Blue Theme) -->
+    <!-- Services / Capabilities Section (Navy Blue Theme) -->
     <section id="services" class="w-full bg-navy text-navy-light px-5 sm:px-8 md:px-10 py-20 md:py-32 relative z-20">
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-16 md:mb-24">
-                <div class="text-xs uppercase tracking-widest text-slate-400 font-semibold mb-3">Core Expertise</div>
+                <div class="text-xs uppercase tracking-widest text-slate-400 font-semibold mb-3">Group Capabilities</div>
                 <h2 class="navy-heading font-black uppercase text-[clamp(3rem,12vw,150px)] leading-none tracking-tighter reveal">
                     Services
                 </h2>
@@ -510,36 +549,36 @@
                 <div class="py-10 md:py-14 border-t border-slate-700/80 flex flex-col md:flex-row gap-6 md:gap-12 items-start reveal stagger-1 group hover:border-slate-400 transition-colors">
                     <span class="font-black text-[clamp(3rem,8vw,110px)] leading-none text-navy-light group-hover:text-white transition-colors">01</span>
                     <div class="flex-1 pt-2 md:pt-4">
-                        <h3 class="font-bold uppercase text-[clamp(1.2rem,2.4vw,2.2rem)] mb-3 text-white">Bespoke Medical & Clinic Web Design</h3>
-                        <p class="font-light leading-relaxed max-w-2xl text-slate-300 text-[clamp(0.95rem,1.5vw,1.2rem)]">High-converting, empathetic websites for private practices, surgeons, dental clinics, and wellness centers engineered for trust and zero-friction patient booking.</p>
+                        <h3 class="font-bold uppercase text-[clamp(1.2rem,2.4vw,2.2rem)] mb-3 text-white">Bespoke Medical & Enterprise Web Ecosystems</h3>
+                        <p class="font-light leading-relaxed max-w-2xl text-slate-300 text-[clamp(0.95rem,1.5vw,1.2rem)]">High-converting, authoritative platforms engineered for clinical credibility, patient booking, and enterprise workflows with zero-friction UX.</p>
                     </div>
                 </div>
                 
                 <div class="py-10 md:py-14 border-t border-slate-700/80 flex flex-col md:flex-row gap-6 md:gap-12 items-start reveal stagger-2 group hover:border-slate-400 transition-colors">
                     <span class="font-black text-[clamp(3rem,8vw,110px)] leading-none text-navy-light group-hover:text-white transition-colors">02</span>
                     <div class="flex-1 pt-2 md:pt-4">
-                        <h3 class="font-bold uppercase text-[clamp(1.2rem,2.4vw,2.2rem)] mb-3 text-white">AI Workflows & Practice Automations</h3>
-                        <p class="font-light leading-relaxed max-w-2xl text-slate-300 text-[clamp(0.95rem,1.5vw,1.2rem)]">Tailored intelligent automations, automated appointment reminders, intake flows, and custom AI tools that save practice hours every single week.</p>
+                        <h3 class="font-bold uppercase text-[clamp(1.2rem,2.4vw,2.2rem)] mb-3 text-white">AI Workflows & Enterprise Automations</h3>
+                        <p class="font-light leading-relaxed max-w-2xl text-slate-300 text-[clamp(0.95rem,1.5vw,1.2rem)]">Intelligent business workflows, automated communication pipelines, and proprietary tooling that power operations across our group's companies.</p>
                     </div>
                 </div>
 
                 <div class="py-10 md:py-14 border-t border-slate-700/80 flex flex-col md:flex-row gap-6 md:gap-12 items-start reveal stagger-3 group hover:border-slate-400 transition-colors border-b">
                     <span class="font-black text-[clamp(3rem,8vw,110px)] leading-none text-navy-light group-hover:text-white transition-colors">03</span>
                     <div class="flex-1 pt-2 md:pt-4">
-                        <h3 class="font-bold uppercase text-[clamp(1.2rem,2.4vw,2.2rem)] mb-3 text-white">Interactive 3D & Spatial Product Experiences</h3>
-                        <p class="font-light leading-relaxed max-w-2xl text-slate-300 text-[clamp(0.95rem,1.5vw,1.2rem)]">WebGL, Three.js shaders, and dynamic 3D spatial product showcases that keep potential clients immersed and boost session durations dramatically.</p>
+                        <h3 class="font-bold uppercase text-[clamp(1.2rem,2.4vw,2.2rem)] mb-3 text-white">Interactive 3D & Digital Platforms</h3>
+                        <p class="font-light leading-relaxed max-w-2xl text-slate-300 text-[clamp(0.95rem,1.5vw,1.2rem)]">WebGL, spatial product showcases, and interactive 3D web experiences designed to establish decisive market leadership for every brand in our ecosystem.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Key Highlights & Social Proof Bento Matrix Section -->
+    <!-- Key Highlights / The LGC Advantage Matrix Section -->
     <section id="highlights" class="w-full bg-[#0f172a] text-white px-5 sm:px-8 md:px-10 py-16 relative z-20">
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-12">
-                <span class="text-xs uppercase tracking-widest text-slate-400 font-semibold mb-2 block">Why Clients Choose Me</span>
-                <h3 class="hero-heading font-black uppercase text-3xl md:text-5xl tracking-tight">Engineered For Impact</h3>
+                <span class="text-xs uppercase tracking-widest text-slate-400 font-semibold mb-2 block">The LGC Advantage</span>
+                <h3 class="hero-heading font-black uppercase text-3xl md:text-5xl tracking-tight">Engineered For Scale</h3>
             </div>
 
             <!-- Bento 4-Box Grid -->
@@ -564,8 +603,8 @@
                     </div>
                     <div>
                         <div class="text-4xl font-black text-white tracking-tight mb-1 font-mono">100%</div>
-                        <div class="text-sm font-semibold uppercase tracking-wider text-slate-200 mb-2">Bespoke Code</div>
-                        <p class="text-xs text-slate-400 leading-relaxed">Tailored architecture built specifically for your brand identity. Zero generic page-builders.</p>
+                        <div class="text-sm font-semibold uppercase tracking-wider text-slate-200 mb-2">Proprietary Code</div>
+                        <p class="text-xs text-slate-400 leading-relaxed">Tailored architecture built specifically for each brand. Zero generic templates or bloated builders.</p>
                     </div>
                 </div>
 
@@ -575,9 +614,9 @@
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
                     </div>
                     <div>
-                        <div class="text-4xl font-black text-white tracking-tight mb-1">Medical</div>
-                        <div class="text-sm font-semibold uppercase tracking-wider text-slate-200 mb-2">Clinical UX Intuition</div>
-                        <p class="text-xs text-slate-400 leading-relaxed">Designed with a doctor's eye for patient psychology, credibility cues, and accessibility.</p>
+                        <div class="text-4xl font-black text-white tracking-tight mb-1">Clinical</div>
+                        <div class="text-sm font-semibold uppercase tracking-wider text-slate-200 mb-2">Medical-Grade Rigor</div>
+                        <p class="text-xs text-slate-400 leading-relaxed">Designed with doctor-grade precision, patient intuition, and strict enterprise security standards.</p>
                     </div>
                 </div>
 
@@ -588,8 +627,8 @@
                     </div>
                     <div>
                         <div class="text-4xl font-black text-white tracking-tight mb-1 font-mono">8+</div>
-                        <div class="text-sm font-semibold uppercase tracking-wider text-slate-200 mb-2">Live Production Builds</div>
-                        <p class="text-xs text-slate-400 leading-relaxed">Active websites serving real visitors with 99.99% uptime and zero friction.</p>
+                        <div class="text-sm font-semibold uppercase tracking-wider text-slate-200 mb-2">Active Ventures Managed</div>
+                        <p class="text-xs text-slate-400 leading-relaxed">A thriving ecosystem of live companies and platforms operating with 99.99% uptime.</p>
                     </div>
                 </div>
 
@@ -597,7 +636,7 @@
 
             <!-- Tech Stack Pills Showcase -->
             <div class="mt-14 pt-10 border-t border-slate-700/60 text-center">
-                <span class="text-xs uppercase tracking-widest text-slate-400 mb-5 block font-semibold">Interactive Tech Stack & Tooling</span>
+                <span class="text-xs uppercase tracking-widest text-slate-400 mb-5 block font-semibold">Group Engineering Stack & Tooling</span>
                 <div class="flex flex-wrap justify-center gap-2.5 max-w-4xl mx-auto">
                     <span class="tech-tag liquid-glass px-4 py-2 rounded-full text-xs font-mono uppercase tracking-wider text-slate-300 hover:text-white hover:border-purple-400 hover:scale-105 transition-all cursor-default magnetic-item">Three.js / WebGL</span>
                     <span class="tech-tag liquid-glass px-4 py-2 rounded-full text-xs font-mono uppercase tracking-wider text-slate-300 hover:text-white hover:border-purple-400 hover:scale-105 transition-all cursor-default magnetic-item">GSAP Animations</span>
@@ -607,7 +646,7 @@
                     <span class="tech-tag liquid-glass px-4 py-2 rounded-full text-xs font-mono uppercase tracking-wider text-slate-300 hover:text-white hover:border-purple-400 hover:scale-105 transition-all cursor-default magnetic-item">Canvas & Shaders</span>
                     <span class="tech-tag liquid-glass px-4 py-2 rounded-full text-xs font-mono uppercase tracking-wider text-slate-300 hover:text-white hover:border-purple-400 hover:scale-105 transition-all cursor-default magnetic-item">Web Audio API</span>
                     <span class="tech-tag liquid-glass px-4 py-2 rounded-full text-xs font-mono uppercase tracking-wider text-slate-300 hover:text-white hover:border-purple-400 hover:scale-105 transition-all cursor-default magnetic-item">Python & AI Automations</span>
-                    <span class="tech-tag liquid-glass px-4 py-2 rounded-full text-xs font-mono uppercase tracking-wider text-slate-300 hover:text-white hover:border-purple-400 hover:scale-105 transition-all cursor-default magnetic-item">UI/UX Design Systems</span>
+                    <span class="tech-tag liquid-glass px-4 py-2 rounded-full text-xs font-mono uppercase tracking-wider text-slate-300 hover:text-white hover:border-purple-400 hover:scale-105 transition-all cursor-default magnetic-item">Enterprise UI/UX Design</span>
                 </div>
             </div>
         </div>
@@ -616,25 +655,25 @@
     <!-- Seamless Gradient Transition from Services (#0f172a) to Work (#0C0C0C) -->
     <div class="transition-services-work"></div>
 
-    <!-- Projects Section (Seamlessly blended background) -->
+    <!-- Projects Section (LGC Ventures & Companies Portfolio) -->
     <section id="work" class="w-full bg-[#0C0C0C] text-white px-5 sm:px-8 md:px-10 py-20 relative z-30">
         <div class="text-center mb-16">
-            <div class="text-xs uppercase tracking-widest text-slate-400 font-semibold mb-3">Portfolio Archive</div>
+            <div class="text-xs uppercase tracking-widest text-slate-400 font-semibold mb-3">LGC Ecosystem Portfolio</div>
             <h2 class="hero-heading font-black uppercase text-[clamp(3rem,12vw,150px)] leading-none tracking-tighter reveal">
-                Work
+                Ventures
             </h2>
-            <p class="text-slate-400 text-sm max-w-md mx-auto mt-4 reveal stagger-1">Click <span class="text-white font-semibold">"Interactive Preview"</span> to test any project inside our device mockup without leaving the portfolio.</p>
+            <p class="text-slate-400 text-sm max-w-md mx-auto mt-4 reveal stagger-1">All ventures engineered, managed, and arranged under <span class="text-white font-semibold">Lashkari Group of Companies</span>. Click "Preview" to explore any enterprise live.</p>
         </div>
 
         <div class="max-w-7xl mx-auto space-y-6">
             
             <!-- 1. Smile Studio -->
-            <div class="min-h-[80vh] flex items-center justify-center sticky top-20 md:top-28 project-card transform transition-transform duration-200" style="top: 0px;" data-project-title="Smile Studio" data-project-url="https://dental-clinic-tau-khaki.vercel.app/">
+            <div class="min-h-[75vh] flex items-center justify-center sticky top-20 md:top-28 project-card transform transition-transform duration-200" style="top: 0px;" data-project-title="Smile Studio" data-project-url="https://dental-clinic-tau-khaki.vercel.app/">
                 <div class="w-full rounded-[36px] md:rounded-[50px] border border-[#D7E2EA]/30 bg-[#0C0C0C]/90 backdrop-blur-xl p-5 md:p-8 shadow-2xl">
                     <div class="flex flex-wrap justify-between items-center gap-4 mb-6 px-2">
                         <div class="flex items-center gap-4">
                             <span class="text-sm font-bold text-[var(--accent-2)]">01</span>
-                            <span class="uppercase tracking-widest text-xs sm:text-sm font-medium text-[#D7E2EA]/70">Healthcare & Dentistry</span>
+                            <span class="uppercase tracking-widest text-xs sm:text-sm font-medium text-[#D7E2EA]/70">Healthcare & Dentistry • LGC Venture</span>
                         </div>
                         <h3 class="text-xl md:text-3xl font-bold uppercase tracking-tight text-white">Smile Studio</h3>
                         <div class="flex items-center gap-2.5">
@@ -650,21 +689,21 @@
                     </div>
                     <div class="flex flex-col md:flex-row gap-4 h-[55vh] md:h-[62vh]">
                         <div class="w-full md:w-[40%] flex flex-col gap-4">
-                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1629909615184-74f495363b67?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Smile Studio" /></div>
-                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1606811971618-4486d14f3f99?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Smile Studio" /></div>
+                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1629909615184-74f495363b67?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Smile Studio" loading="lazy" decoding="async" /></div>
+                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1606811971618-4486d14f3f99?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Smile Studio" loading="lazy" decoding="async" /></div>
                         </div>
-                        <div class="w-full md:w-[60%] h-full rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Smile Studio" /></div>
+                        <div class="w-full md:w-[60%] h-full rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Smile Studio" loading="lazy" decoding="async" /></div>
                     </div>
                 </div>
             </div>
 
             <!-- 2. Veridian -->
-            <div class="min-h-[80vh] flex items-center justify-center sticky top-20 md:top-28 project-card transform transition-transform duration-200" style="top: 25px;" data-project-title="Veridian" data-project-url="https://real-estast.vercel.app/">
+            <div class="min-h-[75vh] flex items-center justify-center sticky top-20 md:top-28 project-card transform transition-transform duration-200" style="top: 25px;" data-project-title="Veridian" data-project-url="https://real-estast.vercel.app/">
                 <div class="w-full rounded-[36px] md:rounded-[50px] border border-[#D7E2EA]/30 bg-[#0C0C0C]/90 backdrop-blur-xl p-5 md:p-8 shadow-2xl">
                     <div class="flex flex-wrap justify-between items-center gap-4 mb-6 px-2">
                         <div class="flex items-center gap-4">
                             <span class="text-sm font-bold text-[var(--accent-2)]">02</span>
-                            <span class="uppercase tracking-widest text-xs sm:text-sm font-medium text-[#D7E2EA]/70">Luxury Real Estate</span>
+                            <span class="uppercase tracking-widest text-xs sm:text-sm font-medium text-[#D7E2EA]/70">Luxury Real Estate • LGC Venture</span>
                         </div>
                         <h3 class="text-xl md:text-3xl font-bold uppercase tracking-tight text-white">Veridian</h3>
                         <div class="flex items-center gap-2.5">
@@ -680,21 +719,21 @@
                     </div>
                     <div class="flex flex-col md:flex-row gap-4 h-[55vh] md:h-[62vh]">
                         <div class="w-full md:w-[40%] flex flex-col gap-4">
-                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Veridian" /></div>
-                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Veridian" /></div>
+                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Veridian" loading="lazy" decoding="async" /></div>
+                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Veridian" loading="lazy" decoding="async" /></div>
                         </div>
-                        <div class="w-full md:w-[60%] h-full rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Veridian" /></div>
+                        <div class="w-full md:w-[60%] h-full rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Veridian" loading="lazy" decoding="async" /></div>
                     </div>
                 </div>
             </div>
 
             <!-- 3. Lumina Skin -->
-            <div class="min-h-[80vh] flex items-center justify-center sticky top-20 md:top-28 project-card transform transition-transform duration-200" style="top: 50px;" data-project-title="Lumina Skin" data-project-url="https://lumina-skin-clinic.vercel.app/">
+            <div class="min-h-[75vh] flex items-center justify-center sticky top-20 md:top-28 project-card transform transition-transform duration-200" style="top: 50px;" data-project-title="Lumina Skin" data-project-url="https://lumina-skin-clinic.vercel.app/">
                 <div class="w-full rounded-[36px] md:rounded-[50px] border border-[#D7E2EA]/30 bg-[#0C0C0C]/90 backdrop-blur-xl p-5 md:p-8 shadow-2xl">
                     <div class="flex flex-wrap justify-between items-center gap-4 mb-6 px-2">
                         <div class="flex items-center gap-4">
                             <span class="text-sm font-bold text-[var(--accent-2)]">03</span>
-                            <span class="uppercase tracking-widest text-xs sm:text-sm font-medium text-[#D7E2EA]/70">Dermatology & Skincare</span>
+                            <span class="uppercase tracking-widest text-xs sm:text-sm font-medium text-[#D7E2EA]/70">Dermatology & Clinical Suite • LGC Venture</span>
                         </div>
                         <h3 class="text-xl md:text-3xl font-bold uppercase tracking-tight text-white">Lumina Skin</h3>
                         <div class="flex items-center gap-2.5">
@@ -710,21 +749,21 @@
                     </div>
                     <div class="flex flex-col md:flex-row gap-4 h-[55vh] md:h-[62vh]">
                         <div class="w-full md:w-[40%] flex flex-col gap-4">
-                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Lumina Skin" /></div>
-                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Lumina Skin" /></div>
+                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Lumina Skin" loading="lazy" decoding="async" /></div>
+                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Lumina Skin" loading="lazy" decoding="async" /></div>
                         </div>
-                        <div class="w-full md:w-[60%] h-full rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1596704017254-9b121068da31?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Lumina Skin" /></div>
+                        <div class="w-full md:w-[60%] h-full rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1596704017254-9b121068da31?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Lumina Skin" loading="lazy" decoding="async" /></div>
                     </div>
                 </div>
             </div>
 
             <!-- 4. HealthFirst -->
-            <div class="min-h-[80vh] flex items-center justify-center sticky top-20 md:top-28 project-card transform transition-transform duration-200" style="top: 75px;" data-project-title="HealthFirst" data-project-url="https://healthfirst-landing.vercel.app/">
+            <div class="min-h-[75vh] flex items-center justify-center sticky top-20 md:top-28 project-card transform transition-transform duration-200" style="top: 75px;" data-project-title="HealthFirst" data-project-url="https://healthfirst-landing.vercel.app/">
                 <div class="w-full rounded-[36px] md:rounded-[50px] border border-[#D7E2EA]/30 bg-[#0C0C0C]/90 backdrop-blur-xl p-5 md:p-8 shadow-2xl">
                     <div class="flex flex-wrap justify-between items-center gap-4 mb-6 px-2">
                         <div class="flex items-center gap-4">
                             <span class="text-sm font-bold text-[var(--accent-2)]">04</span>
-                            <span class="uppercase tracking-widest text-xs sm:text-sm font-medium text-[#D7E2EA]/70">Clinical Diagnostic</span>
+                            <span class="uppercase tracking-widest text-xs sm:text-sm font-medium text-[#D7E2EA]/70">Diagnostic Infrastructure • LGC Venture</span>
                         </div>
                         <h3 class="text-xl md:text-3xl font-bold uppercase tracking-tight text-white">HealthFirst</h3>
                         <div class="flex items-center gap-2.5">
@@ -740,21 +779,21 @@
                     </div>
                     <div class="flex flex-col md:flex-row gap-4 h-[55vh] md:h-[62vh]">
                         <div class="w-full md:w-[40%] flex flex-col gap-4">
-                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="HealthFirst" /></div>
-                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="HealthFirst" /></div>
+                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="HealthFirst" loading="lazy" decoding="async" /></div>
+                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="HealthFirst" loading="lazy" decoding="async" /></div>
                         </div>
-                        <div class="w-full md:w-[60%] h-full rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="HealthFirst" /></div>
+                        <div class="w-full md:w-[60%] h-full rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="HealthFirst" loading="lazy" decoding="async" /></div>
                     </div>
                 </div>
             </div>
 
             <!-- 5. Coffee Bean -->
-            <div class="min-h-[80vh] flex items-center justify-center sticky top-20 md:top-28 project-card transform transition-transform duration-200" style="top: 100px;" data-project-title="Coffee Bean" data-project-url="https://coffe-bean-tau.vercel.app/">
+            <div class="min-h-[75vh] flex items-center justify-center sticky top-20 md:top-28 project-card transform transition-transform duration-200" style="top: 100px;" data-project-title="Coffee Bean" data-project-url="https://coffe-bean-tau.vercel.app/">
                 <div class="w-full rounded-[36px] md:rounded-[50px] border border-[#D7E2EA]/30 bg-[#0C0C0C]/90 backdrop-blur-xl p-5 md:p-8 shadow-2xl">
                     <div class="flex flex-wrap justify-between items-center gap-4 mb-6 px-2">
                         <div class="flex items-center gap-4">
                             <span class="text-sm font-bold text-[var(--accent-2)]">05</span>
-                            <span class="uppercase tracking-widest text-xs sm:text-sm font-medium text-[#D7E2EA]/70">Artisanal F&B</span>
+                            <span class="uppercase tracking-widest text-xs sm:text-sm font-medium text-[#D7E2EA]/70">Artisanal Commerce & F&B • LGC Venture</span>
                         </div>
                         <h3 class="text-xl md:text-3xl font-bold uppercase tracking-tight text-white">Coffee Bean</h3>
                         <div class="flex items-center gap-2.5">
@@ -770,21 +809,21 @@
                     </div>
                     <div class="flex flex-col md:flex-row gap-4 h-[55vh] md:h-[62vh]">
                         <div class="w-full md:w-[40%] flex flex-col gap-4">
-                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Coffee Bean" /></div>
-                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Coffee Bean" /></div>
+                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Coffee Bean" loading="lazy" decoding="async" /></div>
+                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Coffee Bean" loading="lazy" decoding="async" /></div>
                         </div>
-                        <div class="w-full md:w-[60%] h-full rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Coffee Bean" /></div>
+                        <div class="w-full md:w-[60%] h-full rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Coffee Bean" loading="lazy" decoding="async" /></div>
                     </div>
                 </div>
             </div>
 
             <!-- 6. Seller -->
-            <div class="min-h-[80vh] flex items-center justify-center sticky top-20 md:top-28 project-card transform transition-transform duration-200" style="top: 125px;" data-project-title="Seller" data-project-url="https://seller-theta-liard.vercel.app/">
+            <div class="min-h-[75vh] flex items-center justify-center sticky top-20 md:top-28 project-card transform transition-transform duration-200" style="top: 125px;" data-project-title="Seller" data-project-url="https://seller-theta-liard.vercel.app/">
                 <div class="w-full rounded-[36px] md:rounded-[50px] border border-[#D7E2EA]/30 bg-[#0C0C0C]/90 backdrop-blur-xl p-5 md:p-8 shadow-2xl">
                     <div class="flex flex-wrap justify-between items-center gap-4 mb-6 px-2">
                         <div class="flex items-center gap-4">
                             <span class="text-sm font-bold text-[var(--accent-2)]">06</span>
-                            <span class="uppercase tracking-widest text-xs sm:text-sm font-medium text-[#D7E2EA]/70">E-Commerce & Retail</span>
+                            <span class="uppercase tracking-widest text-xs sm:text-sm font-medium text-[#D7E2EA]/70">Digital Retail & E-Commerce • LGC Venture</span>
                         </div>
                         <h3 class="text-xl md:text-3xl font-bold uppercase tracking-tight text-white">Seller</h3>
                         <div class="flex items-center gap-2.5">
@@ -800,21 +839,21 @@
                     </div>
                     <div class="flex flex-col md:flex-row gap-4 h-[55vh] md:h-[62vh]">
                         <div class="w-full md:w-[40%] flex flex-col gap-4">
-                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Seller" /></div>
-                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Seller" /></div>
+                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Seller" loading="lazy" decoding="async" /></div>
+                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Seller" loading="lazy" decoding="async" /></div>
                         </div>
-                        <div class="w-full md:w-[60%] h-full rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Seller" /></div>
+                        <div class="w-full md:w-[60%] h-full rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="Seller" loading="lazy" decoding="async" /></div>
                     </div>
                 </div>
             </div>
 
             <!-- 7. The Master Key -->
-            <div class="min-h-[80vh] flex items-center justify-center sticky top-20 md:top-28 project-card transform transition-transform duration-200" style="top: 150px;" data-project-title="The Master Key" data-project-url="https://the-master-key-frontend.vercel.app/">
+            <div class="min-h-[75vh] flex items-center justify-center sticky top-20 md:top-28 project-card transform transition-transform duration-200" style="top: 150px;" data-project-title="The Master Key" data-project-url="https://the-master-key-frontend.vercel.app/">
                 <div class="w-full rounded-[36px] md:rounded-[50px] border border-[#D7E2EA]/30 bg-[#0C0C0C]/90 backdrop-blur-xl p-5 md:p-8 shadow-2xl">
                     <div class="flex flex-wrap justify-between items-center gap-4 mb-6 px-2">
                         <div class="flex items-center gap-4">
                             <span class="text-sm font-bold text-[var(--accent-2)]">07</span>
-                            <span class="uppercase tracking-widest text-xs sm:text-sm font-medium text-[#D7E2EA]/70">Cybersecurity & Fintech</span>
+                            <span class="uppercase tracking-widest text-xs sm:text-sm font-medium text-[#D7E2EA]/70">Fintech & Cybersecurity • LGC Venture</span>
                         </div>
                         <h3 class="text-xl md:text-3xl font-bold uppercase tracking-tight text-white">The Master Key</h3>
                         <div class="flex items-center gap-2.5">
@@ -830,21 +869,21 @@
                     </div>
                     <div class="flex flex-col md:flex-row gap-4 h-[55vh] md:h-[62vh]">
                         <div class="w-full md:w-[40%] flex flex-col gap-4">
-                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="The Master Key" /></div>
-                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1526304640152-d4619684e484?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="The Master Key" /></div>
+                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="The Master Key" loading="lazy" decoding="async" /></div>
+                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1526304640152-d4619684e484?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="The Master Key" loading="lazy" decoding="async" /></div>
                         </div>
-                        <div class="w-full md:w-[60%] h-full rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="The Master Key" /></div>
+                        <div class="w-full md:w-[60%] h-full rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="The Master Key" loading="lazy" decoding="async" /></div>
                     </div>
                 </div>
             </div>
 
             <!-- 8. ZAPP -->
-            <div class="min-h-[80vh] flex items-center justify-center sticky top-20 md:top-28 project-card transform transition-transform duration-200" style="top: 175px;" data-project-title="ZAPP" data-project-url="https://zappp.vercel.app/">
+            <div class="min-h-[75vh] flex items-center justify-center sticky top-20 md:top-28 project-card transform transition-transform duration-200" style="top: 175px;" data-project-title="ZAPP" data-project-url="https://zappp.vercel.app/">
                 <div class="w-full rounded-[36px] md:rounded-[50px] border border-[#D7E2EA]/30 bg-[#0C0C0C]/90 backdrop-blur-xl p-5 md:p-8 shadow-2xl">
                     <div class="flex flex-wrap justify-between items-center gap-4 mb-6 px-2">
                         <div class="flex items-center gap-4">
                             <span class="text-sm font-bold text-[var(--accent-2)]">08</span>
-                            <span class="uppercase tracking-widest text-xs sm:text-sm font-medium text-[#D7E2EA]/70">Clean Energy & EV</span>
+                            <span class="uppercase tracking-widest text-xs sm:text-sm font-medium text-[#D7E2EA]/70">Clean Tech & EV Mobility • LGC Venture</span>
                         </div>
                         <h3 class="text-xl md:text-3xl font-bold uppercase tracking-tight text-white">ZAPP</h3>
                         <div class="flex items-center gap-2.5">
@@ -860,10 +899,10 @@
                     </div>
                     <div class="flex flex-col md:flex-row gap-4 h-[55vh] md:h-[62vh]">
                         <div class="w-full md:w-[40%] flex flex-col gap-4">
-                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="ZAPP" /></div>
-                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="ZAPP" /></div>
+                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="ZAPP" loading="lazy" decoding="async" /></div>
+                            <div class="h-1/2 rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="ZAPP" loading="lazy" decoding="async" /></div>
                         </div>
-                        <div class="w-full md:w-[60%] h-full rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1618898909019-010e4e234c55?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="ZAPP" /></div>
+                        <div class="w-full md:w-[60%] h-full rounded-[28px] md:rounded-[36px] overflow-hidden"><img src="https://images.unsplash.com/photo-1618898909019-010e4e234c55?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover project-img" alt="ZAPP" loading="lazy" decoding="async" /></div>
                     </div>
                 </div>
             </div>
@@ -880,7 +919,7 @@
                 <span class="w-3 h-3 rounded-full bg-red-500/80 cursor-pointer" onclick="closeDevicePreview()"></span>
                 <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
                 <span class="w-3 h-3 rounded-full bg-emerald-500/80"></span>
-                <span id="preview-modal-title" class="text-sm font-bold text-white uppercase tracking-wider ml-2 font-mono">Project Preview</span>
+                <span id="preview-modal-title" class="text-sm font-bold text-white uppercase tracking-wider ml-2 font-mono">Live LGC Venture Preview</span>
             </div>
 
             <!-- Viewport Toggle Buttons (Desktop vs Mobile) -->
@@ -912,36 +951,36 @@
             <!-- Loading Indicator -->
             <div id="iframe-loader" class="absolute inset-0 flex flex-col items-center justify-center bg-[#0C0C0C] z-10 transition-opacity duration-300">
                 <div class="w-10 h-10 border-2 border-white/20 border-t-[var(--accent-2)] rounded-full animate-spin mb-4"></div>
-                <div class="text-xs uppercase tracking-widest text-white/50 font-mono">Loading Live Interface...</div>
+                <div class="text-xs uppercase tracking-widest text-white/50 font-mono">Loading Live Venture Interface...</div>
             </div>
             <!-- Live Iframe -->
             <iframe id="preview-iframe" src="" class="w-full h-full border-0 bg-[#0C0C0C]" onload="hideIframeLoader()"></iframe>
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- Footer / Executive Contact -->
     <footer id="contact" class="bg-[#0C0C0C] pt-24 pb-12 px-6 border-t border-white/5 relative">
         <div class="max-w-7xl mx-auto flex flex-col items-center text-center">
             
             <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full liquid-glass text-xs font-semibold uppercase tracking-widest text-white/70 mb-8 reveal">
                 <span class="w-2 h-2 rounded-full bg-[var(--accent-2)] animate-ping"></span>
-                Let's Build Something Unforgettable
+                Partner With Lashkari Group
             </div>
 
-            <h2 class="hero-heading font-black text-5xl md:text-8xl uppercase tracking-tighter mb-8 reveal">Let's Talk</h2>
+            <h2 class="hero-heading font-black text-5xl md:text-8xl uppercase tracking-tighter mb-8 reveal">Let's Connect</h2>
             <p class="text-[#D7E2EA] max-w-lg mb-10 text-base md:text-lg leading-relaxed reveal stagger-1">
-                Ready to elevate your medical practice, clinic, or brand with an unmatched bespoke experience? Click below to instantly copy my email.
+                Looking to collaborate, invest, or partner with Lashkari Group of Companies? Click below to instantly connect with our executive team.
             </p>
             
             <div class="flex flex-col sm:flex-row items-center gap-4 mb-16 reveal stagger-2">
                 <button onclick="copyEmailToClipboard()" class="liquid-glass liquid-glass-strong rounded-full px-10 py-4 text-white font-semibold uppercase tracking-widest text-sm md:text-base flex items-center gap-3 group hover-scale magnetic-item" data-sound="click">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                    <span>Copy Email & Inquire</span>
+                    <span>Copy LGC Email & Connect</span>
                     <svg class="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
                 </button>
             </div>
 
-            <!-- Social Links with 1-Click Copy -->
+            <!-- Social Links & Email -->
             <div class="flex gap-6 mb-10 reveal stagger-3">
                 <a href="#" class="w-11 h-11 rounded-full liquid-glass flex items-center justify-center text-white/60 hover:text-white hover:border-white/20 transition-all magnetic-item" aria-label="Instagram" data-sound="hover">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
@@ -949,13 +988,13 @@
                 <a href="#" class="w-11 h-11 rounded-full liquid-glass flex items-center justify-center text-white/60 hover:text-white hover:border-white/20 transition-all magnetic-item" aria-label="Twitter / X" data-sound="hover">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-12.7 12.5S2.5 8.5 5 2.3c2.9-1 5.5.7 7.3 2.5 3.2-1 6-1 6-1z"/></svg>
                 </a>
-                <button onclick="copyEmailToClipboard()" class="w-11 h-11 rounded-full liquid-glass flex items-center justify-center text-white/60 hover:text-white hover:border-white/20 transition-all magnetic-item" aria-label="Email" data-sound="click">
+                <button onclick="copyEmailToClipboard()" class="w-11 h-11 rounded-full liquid-glass flex items-center justify-center text-white/60 hover:text-white hover:border-white/20 transition-all magnetic-item" aria-label="Email LGC" data-sound="click">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
                 </button>
             </div>
             
-            <div class="text-white/40 text-xs uppercase tracking-widest font-mono">
-                © 2026 Paras Lashkari. Handcrafted with Precision.
+            <div class="text-white/50 text-xs uppercase tracking-widest font-mono">
+                © 2026 Lashkari Group of Companies (LGC). All Rights Reserved.
             </div>
         </div>
     </footer>
@@ -964,7 +1003,7 @@
     <div id="settings-drawer" class="fixed top-0 right-0 h-full w-[320px] z-50 bg-[#0C0C0C]/90 backdrop-blur-xl border-l border-white/10 translate-x-full transition-transform duration-300 ease-in-out p-8 flex flex-col justify-between shadow-[-10px_0_40px_rgba(0,0,0,0.6)]">
         <div class="flex flex-col gap-8">
             <div class="flex justify-between items-center pb-4 border-b border-white/10">
-                <h3 class="text-white font-bold uppercase tracking-widest text-sm">Design & Sound</h3>
+                <h3 class="text-white font-bold uppercase tracking-widest text-sm">Theme & Sound</h3>
                 <button id="close-settings-btn" type="button" aria-label="Close Settings" class="w-8 h-8 rounded-full flex items-center justify-center text-white/50 hover:text-white hover:bg-white/5 transition-all">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
@@ -1012,8 +1051,8 @@
             </div>
         </div>
         
-        <div class="text-[10px] text-white/30 text-center uppercase tracking-widest border-t border-white/5 pt-4">
-            Lashkari Portfolio v2.0
+        <div class="text-[10px] text-white/30 text-center uppercase tracking-widest border-t border-white/5 pt-4 font-mono">
+            LGC Portfolio Ecosystem v2.0
         </div>
     </div>
 

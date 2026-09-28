@@ -1,6 +1,6 @@
-// ═════════════════════════════════════════════════════════════════
-// PARAS LASHKARI PORTFOLIO — CORE SCRIPT & INTERACTIVE ENGINE
-// ═════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════
+// LASHKARI GROUP OF COMPANIES (LGC) — VENTURE PORTFOLIO ENGINE
+// ═════════════════════════════════════════════════════════════════════
 
 // ── 1. Intersection Observer for Reveal Animations ──
 const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -40px 0px" };
@@ -14,139 +14,66 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.reveal, .word-reveal').forEach(el => observer.observe(el));
 
 
-// ── 2. Sticky Project Card Scale Effect & 3D Tilt ──
-window.addEventListener('scroll', () => {
-    const cards = document.querySelectorAll('.project-card');
-    const viewportHeight = window.innerHeight;
-    cards.forEach((card, index) => {
-        const rect = card.getBoundingClientRect();
-        if (rect.top < viewportHeight && rect.bottom > 0) {
-            const progress = Math.min(Math.max((viewportHeight - rect.top) / viewportHeight, 0), 1);
-            const scale = 1 - ((cards.length - 1 - index) * 0.015) - (progress * 0.02);
-            card.style.transform = `scale(${scale})`;
-        }
-    });
-});
+// ── 2. Sticky Project Card Scale Effect (RAF Throttled & 60fps Smooth) ──
+(function initCardScaling() {
+    const cards = Array.from(document.querySelectorAll('.project-card'));
+    if (!cards.length) return;
 
-// Interactive 3D Card Hover Tilt
+    let isTicking = false;
+
+    function updateCardScales() {
+        const viewportHeight = window.innerHeight;
+        const totalCards = cards.length;
+
+        cards.forEach((card, index) => {
+            const rect = card.getBoundingClientRect();
+            if (rect.top < viewportHeight && rect.bottom > 0) {
+                const progress = Math.min(Math.max((viewportHeight - rect.top) / viewportHeight, 0), 1);
+                const scale = 1 - ((totalCards - 1 - index) * 0.012) - (progress * 0.018);
+                card.style.transform = `scale(${scale.toFixed(4)})`;
+            }
+        });
+        isTicking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+        if (!isTicking) {
+            requestAnimationFrame(updateCardScales);
+            isTicking = true;
+        }
+    }, { passive: true });
+
+    // Initial calculation
+    updateCardScales();
+})();
+
+
+// ── 3. Interactive 3D Card Hover Tilt ──
 document.querySelectorAll('.project-card').forEach(card => {
     const inner = card.querySelector('.w-full');
     if (!inner) return;
 
+    let rafId = null;
+
     card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        const rotX = -(y / (rect.height / 2)) * 5;
-        const rotY = (x / (rect.width / 2)) * 5;
-        inner.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-4px)`;
-        inner.style.transition = 'transform 0.1s ease-out';
-    });
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(() => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            const rotX = -(y / (rect.height / 2)) * 4;
+            const rotY = (x / (rect.width / 2)) * 4;
+            inner.style.transform = `perspective(1000px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) translateY(-4px)`;
+            inner.style.transition = 'transform 0.1s ease-out';
+        });
+    }, { passive: true });
 
     card.addEventListener('mouseleave', () => {
+        if (rafId) cancelAnimationFrame(rafId);
         inner.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
-        inner.style.transition = 'transform 0.5s ease-out';
+        inner.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
     });
 });
-
-
-// ── 3. Chroma Key Avatar (Green Screen Remover + Shoulder Fix) ──
-(function initAvatar() {
-    const canvas = document.getElementById('avatar-canvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.src = 'avatar-green.png';
-
-    img.onload = function() {
-        const fullW = img.naturalWidth;
-        const fullH = img.naturalHeight;
-
-        canvas.width  = fullW;
-        canvas.height = fullH;
-
-        ctx.drawImage(img, 0, 0);
-
-        // Erase watermark in bottom-right corner (~90-100% x, ~85-100% y)
-        ctx.clearRect(Math.floor(fullW * 0.90), Math.floor(fullH * 0.85), fullW, fullH);
-
-        const imageData = ctx.getImageData(0, 0, fullW, fullH);
-        const d = imageData.data;
-
-        for (let i = 0; i < d.length; i += 4) {
-            const r = d[i], g = d[i+1], b = d[i+2];
-            if (g > 90 && g > r * 1.35 && g > b * 1.35) {
-                const greenness = Math.min(1, (g - Math.max(r, b)) / 80);
-                d[i+3] = Math.round(d[i+3] * (1 - greenness));
-            }
-        }
-        ctx.putImageData(imageData, 0, 0);
-    };
-
-    img.onerror = function() {
-        console.warn('Avatar image failed to load.');
-    };
-})();
-
-// ── 3D Canvas Chroma Keyer (Removes ALL black frame pixels on the fly with geometric masking) ──
-(function init3DCanvases() {
-    const canvases = document.querySelectorAll('.chroma-3d-canvas');
-    canvases.forEach(canvas => {
-        const src = canvas.getAttribute('data-src');
-        const isCircle = canvas.getAttribute('data-mask') === 'circle';
-        if (!src) return;
-
-        const ctx = canvas.getContext('2d');
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.src = src;
-
-        img.onload = function() {
-            const w = img.naturalWidth || 512;
-            const h = img.naturalHeight || 512;
-            canvas.width = w;
-            canvas.height = h;
-
-            ctx.drawImage(img, 0, 0);
-            const imgData = ctx.getImageData(0, 0, w, h);
-            const d = imgData.data;
-
-            const cx = w / 2;
-            const cy = h / 2;
-            const radius = Math.min(w, h) * 0.48;
-
-            for (let i = 0; i < d.length; i += 4) {
-                const px = (i / 4) % w;
-                const py = Math.floor((i / 4) / w);
-                
-                // If circle mask requested (Sphere), remove everything outside the circle
-                if (isCircle) {
-                    const dist = Math.sqrt((px - cx) ** 2 + (py - cy) ** 2);
-                    if (dist > radius) {
-                        d[i + 3] = 0;
-                        continue;
-                    } else if (dist > radius - 3) {
-                        const edgeAlpha = Math.max(0, (radius - dist) / 3);
-                        d[i + 3] = Math.round(d[i + 3] * edgeAlpha);
-                    }
-                }
-
-                // Black chroma-key removal
-                const r = d[i], g = d[i+1], b = d[i+2];
-                const maxVal = Math.max(r, g, b);
-                if (maxVal <= 8) {
-                    d[i + 3] = 0;
-                } else if (maxVal < 32) {
-                    const alphaRatio = (maxVal - 8) / (32 - 8);
-                    d[i + 3] = Math.round(d[i + 3] * alphaRatio);
-                }
-            }
-            ctx.putImageData(imgData, 0, 0);
-        };
-    });
-})();
 
 
 // ── 4. Web Audio API Ambient Generative Soundscape & UI Audio Synth ──
@@ -156,7 +83,6 @@ class AudioEngine {
         this.isPlaying = false;
         this.nodes = [];
         this.masterGain = null;
-        this.isMuted = true;
     }
 
     init() {
@@ -168,6 +94,15 @@ class AudioEngine {
         this.masterGain = this.ctx.createGain();
         this.masterGain.gain.setValueAtTime(0.08, this.ctx.currentTime);
         this.masterGain.connect(this.ctx.destination);
+
+        // Pause sound when tab is inactive to preserve battery & CPU
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && this.ctx && this.isPlaying) {
+                this.ctx.suspend();
+            } else if (!document.hidden && this.ctx && this.isPlaying) {
+                this.ctx.resume();
+            }
+        });
     }
 
     toggleAmbient() {
@@ -204,8 +139,6 @@ class AudioEngine {
 
             osc.type = idx % 2 === 0 ? 'sine' : 'triangle';
             osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-
-            // Subtle gentle detune chorus
             osc.detune.setValueAtTime((idx - 2) * 4, this.ctx.currentTime);
 
             gain.gain.setValueAtTime(0.001, this.ctx.currentTime);
@@ -219,7 +152,7 @@ class AudioEngine {
             this.nodes.push(gain);
         });
 
-        // Gentle subtle LFO for organic breathing filter cutoff
+        // Organic breathing LFO for subtle pad filter modulation
         const lfo = this.ctx.createOscillator();
         const lfoGain = this.ctx.createGain();
         lfo.frequency.setValueAtTime(0.12, this.ctx.currentTime);
@@ -273,7 +206,7 @@ class AudioEngine {
                 osc.start(now);
                 osc.stop(now + 0.085);
             } else if (type === 'success') {
-                // Happy major triad chime
+                // Major triad chime for copy confirmation
                 [523.25, 659.25, 783.99].forEach((f, i) => {
                     const o = this.ctx.createOscillator();
                     const g = this.ctx.createGain();
@@ -330,7 +263,6 @@ window.addEventListener('click', () => {
     const ring = document.getElementById('cursor-ring');
     if (!dot || !ring) return;
 
-    // Check for fine pointer (desktop mouse)
     if (window.matchMedia('(pointer: fine)').matches) {
         document.body.classList.add('has-custom-cursor');
     } else {
@@ -349,17 +281,15 @@ window.addEventListener('click', () => {
     window.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
-
         dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
-    });
+    }, { passive: true });
 
-    // Smooth lerp loop for the outer ring
     function renderCursor() {
         const lerpFactor = isHoveringMagnetic ? 0.25 : 0.15;
         ringX += (mouseX - ringX) * lerpFactor;
         ringY += (mouseY - ringY) * lerpFactor;
 
-        ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
+        ring.style.transform = `translate3d(${ringX.toFixed(1)}px, ${ringY.toFixed(1)}px, 0) translate(-50%, -50%)`;
         requestAnimationFrame(renderCursor);
     }
     requestAnimationFrame(renderCursor);
@@ -382,9 +312,8 @@ window.addEventListener('click', () => {
             const cy = rect.top + rect.height / 2;
             const pullX = (e.clientX - cx) * 0.22;
             const pullY = (e.clientY - cy) * 0.22;
-
-            targetEl.style.transform = `translate3d(${pullX}px, ${pullY}px, 0)`;
-        });
+            targetEl.style.transform = `translate3d(${pullX.toFixed(1)}px, ${pullY.toFixed(1)}px, 0)`;
+        }, { passive: true });
 
         el.addEventListener('mouseleave', () => {
             ring.classList.remove('active-hover');
@@ -408,40 +337,55 @@ window.addEventListener('click', () => {
 })();
 
 
-// ── 6. 3D Mouse Parallax on Floating Objects ──
+// ── 6. 3D Mouse Parallax on Floating Objects (With Visibility Observer) ──
 (function init3DParallax() {
+    const aboutSection = document.getElementById('about');
     const parallaxItems = document.querySelectorAll('.parallax-item');
-    if (!parallaxItems.length) return;
+    if (!parallaxItems.length || !aboutSection) return;
 
     let targetX = 0, targetY = 0;
     let currentX = 0, currentY = 0;
+    let isVisible = false;
+    let rafId = null;
+
+    const observer = new IntersectionObserver(([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible && !rafId) {
+            rafId = requestAnimationFrame(updateParallax);
+        }
+    }, { threshold: 0.05 });
+    observer.observe(aboutSection);
 
     window.addEventListener('mousemove', (e) => {
         targetX = (e.clientX - window.innerWidth / 2);
         targetY = (e.clientY - window.innerHeight / 2);
-    });
+    }, { passive: true });
 
     function updateParallax() {
+        if (!isVisible) {
+            rafId = null;
+            return;
+        }
+
         currentX += (targetX - currentX) * 0.06;
         currentY += (targetY - currentY) * 0.06;
 
         parallaxItems.forEach(item => {
             const speed = parseFloat(item.getAttribute('data-parallax-speed') || 0.03);
-            const moveX = currentX * speed;
-            const moveY = currentY * speed;
+            const moveX = (currentX * speed).toFixed(2);
+            const moveY = (currentY * speed).toFixed(2);
             item.style.transform = `translate3d(${moveX}px, ${moveY}px, 0)`;
         });
 
-        requestAnimationFrame(updateParallax);
+        rafId = requestAnimationFrame(updateParallax);
     }
-    requestAnimationFrame(updateParallax);
 })();
 
 
-// ── 7. 1-Click Email Copy & Direct Mail / Gmail Launch ──
+// ── 7. 1-Click Email Copy & Direct Mail / Gmail Launch (LGC Official Email) ──
 window.copyEmailToClipboard = function(e) {
     if (e && e.preventDefault) e.preventDefault();
-    const email = 'paras.l.d.2006@gmail.com';
+    const email = 'lashkarigroupofcompanies@gmail.com';
 
     // 1. Copy to clipboard
     if (navigator.clipboard && window.isSecureContext) {
@@ -461,7 +405,9 @@ window.copyEmailToClipboard = function(e) {
     // 3. Show Toast notification
     const toast = document.getElementById('toast-container');
     const toastTitle = document.getElementById('toast-title');
+    const toastMessage = document.getElementById('toast-message');
     if (toastTitle) toastTitle.textContent = 'Copied & Opening Gmail...';
+    if (toastMessage) toastMessage.textContent = email;
     
     if (toast) {
         toast.classList.remove('translate-y-12', 'opacity-0', 'pointer-events-none');
@@ -476,11 +422,10 @@ window.copyEmailToClipboard = function(e) {
 
     // 4. Simultaneously open Gmail compose in new tab, with mailto fallback
     setTimeout(() => {
-        const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}&su=${encodeURIComponent('Project Inquiry — Web & 3D Experience')}`;
+        const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}&su=${encodeURIComponent('Partnership Inquiry — Lashkari Group of Companies (LGC)')}`;
         const newTab = window.open(gmailUrl, '_blank');
         if (!newTab || newTab.closed || typeof newTab.closed === 'undefined') {
-            // If popup blocked or on mobile, fallback to standard mailto
-            window.location.href = `mailto:${email}?subject=${encodeURIComponent('Project Inquiry — Web & 3D Experience')}`;
+            window.location.href = `mailto:${email}?subject=${encodeURIComponent('Partnership Inquiry — Lashkari Group of Companies (LGC)')}`;
         }
     }, 250);
 };
@@ -497,7 +442,7 @@ window.openDevicePreview = function(url, title) {
     if (!modal || !iframe) return;
 
     if (loader) loader.style.opacity = '1';
-    if (titleEl) titleEl.textContent = `${title} • Live Preview`;
+    if (titleEl) titleEl.textContent = `${title} • Live LGC Venture`;
     if (directLink) directLink.href = url;
 
     iframe.src = url;
@@ -697,91 +642,53 @@ const savedTheme = localStorage.getItem('selected-theme') || 'purple';
 setAccentTheme(savedTheme);
 
 
-// ── 11. Spotlight Reveal Logic ──
+// ── 11. Spotlight Reveal Logic (100% GPU Hardware Accelerated - 0 toDataURL) ──
 (function initSpotlight() {
+    const heroSection = document.querySelector('section');
     const revealLayer = document.getElementById('hero-reveal-layer');
     const cursorGlow = document.getElementById('hero-cursor-glow');
-    if (!revealLayer) return;
+    if (!revealLayer || !heroSection) return;
 
-    const maskCanvas = document.createElement('canvas');
-    maskCanvas.style.display = 'none';
-    document.body.appendChild(maskCanvas);
-    const maskCtx = maskCanvas.getContext('2d');
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let smoothX = mouseX;
+    let smoothY = mouseY;
+    let isHeroVisible = true;
+    let rafId = null;
 
-    const cachedRect = { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
-
-    function resizeMaskCanvas() {
-        cachedRect.width = window.innerWidth;
-        cachedRect.height = window.innerHeight;
-        cachedRect.left = 0;
-        cachedRect.top = 0;
-        maskCanvas.width = Math.floor(window.innerWidth / 2);
-        maskCanvas.height = Math.floor(window.innerHeight / 2);
-    }
-    window.addEventListener('resize', resizeMaskCanvas);
-    resizeMaskCanvas();
-
-    const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    const smooth = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    const SPOTLIGHT_R = 360;
+    // Pause RAF spotlight loop when scrolled away from Hero
+    const heroObserver = new IntersectionObserver(([entry]) => {
+        isHeroVisible = entry.isIntersecting;
+        if (isHeroVisible && !rafId) {
+            rafId = requestAnimationFrame(updateSpotlight);
+        }
+    }, { threshold: 0.05 });
+    heroObserver.observe(heroSection);
 
     window.addEventListener('mousemove', (e) => {
-        mouse.x = e.clientX - cachedRect.left;
-        mouse.y = e.clientY - cachedRect.top;
-    });
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    }, { passive: true });
 
     function updateSpotlight() {
-        smooth.x += (mouse.x - smooth.x) * 0.1;
-        smooth.y += (mouse.y - smooth.y) * 0.1;
-
-        const cw = maskCanvas.width;
-        const ch = maskCanvas.height;
-
-        if (cw > 0 && ch > 0) {
-            maskCtx.clearRect(0, 0, cw, ch);
-
-            const scaleX = cw / cachedRect.width;
-            const scaleY = ch / cachedRect.height;
-            const cx = smooth.x * scaleX;
-            const cy = smooth.y * scaleY;
-            const r = SPOTLIGHT_R * scaleX;
-
-            maskCtx.save();
-            maskCtx.translate(cx, cy);
-            maskCtx.scale(1.5, 0.85);
-
-            const grad = maskCtx.createRadialGradient(0, 0, 0, 0, 0, r);
-            grad.addColorStop(0, 'rgba(255,255,255,1)');
-            grad.addColorStop(0.2, 'rgba(255,255,255,0.85)');
-            grad.addColorStop(0.6, 'rgba(255,255,255,0.3)');
-            grad.addColorStop(1, 'rgba(255,255,255,0)');
-
-            maskCtx.fillStyle = grad;
-            maskCtx.beginPath();
-            maskCtx.arc(0, 0, r, 0, Math.PI * 2);
-            maskCtx.fill();
-            maskCtx.restore();
-
-            maskCtx.globalCompositeOperation = 'destination-in';
-            const bottomFade = maskCtx.createLinearGradient(0, 0, 0, ch);
-            bottomFade.addColorStop(0, 'rgba(255,255,255,1)');
-            bottomFade.addColorStop(0.6, 'rgba(255,255,255,1)');
-            bottomFade.addColorStop(0.95, 'rgba(255,255,255,0)');
-            maskCtx.fillStyle = bottomFade;
-            maskCtx.fillRect(0, 0, cw, ch);
-            maskCtx.globalCompositeOperation = 'source-over';
-
-            const maskDataUrl = maskCanvas.toDataURL('image/png');
-            revealLayer.style.maskImage = `url(${maskDataUrl})`;
-            revealLayer.style.webkitMaskImage = `url(${maskDataUrl})`;
+        if (!isHeroVisible) {
+            rafId = null;
+            return;
         }
+
+        smoothX += (mouseX - smoothX) * 0.12;
+        smoothY += (mouseY - smoothY) * 0.12;
+
+        // Direct GPU property update
+        revealLayer.style.setProperty('--spot-x', `${smoothX.toFixed(1)}px`);
+        revealLayer.style.setProperty('--spot-y', `${smoothY.toFixed(1)}px`);
 
         if (cursorGlow) {
-            cursorGlow.style.left = `${smooth.x}px`;
-            cursorGlow.style.top = `${smooth.y}px`;
+            cursorGlow.style.transform = `translate3d(${smoothX.toFixed(1)}px, ${smoothY.toFixed(1)}px, 0) translate(-50%, -50%)`;
         }
 
-        requestAnimationFrame(updateSpotlight);
+        rafId = requestAnimationFrame(updateSpotlight);
     }
-    requestAnimationFrame(updateSpotlight);
+
+    rafId = requestAnimationFrame(updateSpotlight);
 })();
