@@ -1,5 +1,5 @@
 // ═════════════════════════════════════════════════════════════════════
-// LASHKARI GROUP OF COMPANIES (LGC) — VENTURE PORTFOLIO ENGINE
+// PEROIX (LASHKARI GROUP OF COMPANIES) — PORTFOLIO ENGINE
 // ═════════════════════════════════════════════════════════════════════
 
 // ── 1. Intersection Observer for Reveal Animations ──
@@ -422,10 +422,10 @@ window.copyEmailToClipboard = function(e) {
 
     // 4. Simultaneously open Gmail compose in new tab, with mailto fallback
     setTimeout(() => {
-        const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}&su=${encodeURIComponent('Partnership Inquiry — Lashkari Group of Companies (LGC)')}`;
+        const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}&su=${encodeURIComponent('Partnership Inquiry — PEROIX (Lashkari Group of Companies)')}`;
         const newTab = window.open(gmailUrl, '_blank');
         if (!newTab || newTab.closed || typeof newTab.closed === 'undefined') {
-            window.location.href = `mailto:${email}?subject=${encodeURIComponent('Partnership Inquiry — Lashkari Group of Companies (LGC)')}`;
+            window.location.href = `mailto:${email}?subject=${encodeURIComponent('Partnership Inquiry — PEROIX (Lashkari Group of Companies)')}`;
         }
     }, 250);
 };
@@ -442,7 +442,7 @@ window.openDevicePreview = function(url, title) {
     if (!modal || !iframe) return;
 
     if (loader) loader.style.opacity = '1';
-    if (titleEl) titleEl.textContent = `${title} • Live LGC Venture`;
+    if (titleEl) titleEl.textContent = `${title} • Live PEROIX Venture`;
     if (directLink) directLink.href = url;
 
     iframe.src = url;
